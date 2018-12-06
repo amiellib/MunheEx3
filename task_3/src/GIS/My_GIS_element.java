@@ -19,7 +19,7 @@ public class My_GIS_element implements GIS_element{
 /**
  * 
  * @param geom the geo information of the location of the element (gps)
- * @param data the meta fata such as colour orientation  and time
+ * @param data the meta data such as colour orientation  and time
  * @param mAC data of point
  * @param sSID data of point
  * @param authMode data of point
