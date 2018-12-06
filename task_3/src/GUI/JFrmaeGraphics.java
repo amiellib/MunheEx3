@@ -20,7 +20,7 @@ public class JFrmaeGraphics extends JPanel{
 			 g.fillOval(w/3, h/3, w/3, h/3);
 			g.setColor(Color.blue);
 			String s = " ["+w+","+h+"]";
-		    g.drawString(s, w/3, h/2);
+		    g.drawString(s, w, h);
 		   
 		    
 	}
