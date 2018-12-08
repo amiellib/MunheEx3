@@ -10,14 +10,16 @@ import Geom.Point3D;
 
 public class Packman 
 {
+	private int packman_id;
 	private Point3D gps;
 	private double range;
 	private double speed;
 	private Image packman_image;
 
 	
-	public Packman(Point3D gps, double range, double speed) {
+	public Packman(int packman_id ,Point3D gps, double speed , double range) {
 		super();
+		this.packman_id = packman_id;
 		this.gps = gps;
 		this.range = range;
 		this.speed = speed;
@@ -29,11 +31,11 @@ public class Packman
 			e.printStackTrace();
 		}
 	}
-	public Packman(Point3D gps, double speed) {
-		this(gps,1,speed);
+	public Packman(int packman_id , Point3D gps, double speed) {
+		this(packman_id , gps,speed,1);
 	}
-	public Packman(Point3D gps) {
-		this( gps ,1 ,1);
+	public Packman(int packman_id  , Point3D gps) {
+		this(packman_id , gps ,1 ,1);
 	}
 	
 	public Point3D getGps() {

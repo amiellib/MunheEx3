@@ -10,8 +10,9 @@ import Geom.Point3D;
 
 public class Fruit 
 {
+	private int fruit_id;
 	private Point3D Gps;
-
+	private double weight;
 	private Image fruit_image;
 
 	//	private boolean Eaten;
@@ -19,9 +20,11 @@ public class Fruit
 	 * build a Fruit 
 	 * @param gps where is the Fruit placed
 	 */
-	public Fruit(Point3D gps)
+	public Fruit(int fruit_id ,Point3D gps , double weight)
 	{
+		this.fruit_id =fruit_id;
 		this.Gps=new Point3D(gps);
+		this.weight = weight;
 		File pathToFile = new File("resources/fruit.png");
 		try {
 			Image fruit_image = ImageIO.read(pathToFile);
@@ -37,4 +40,13 @@ public class Fruit
 	public Image getFruit_image() {
 		return fruit_image;
 	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+	
 }
