@@ -1,8 +1,8 @@
 package Algorithems;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import Coords.MyCoords;
@@ -19,26 +19,25 @@ public class Algorithems {
 	final Point3D ORIGIN = new Point3D(ORIGIN_LAT, ORIGIN_LON , 0 );
 	final double TOTAL_DISTANCE_X = cord.distance3d(ORIGIN, new Point3D(ORIGIN_LAT , 35.212514 ,0));
 	final double TOTAL_DISTANCE_Y = cord.distance3d(ORIGIN, new Point3D(32.102010 , ORIGIN_LON , 0));
-	
 
-	public Point3D convert_pixel_to_gps(Point3D pixel , int height , int width)
+	public Point3D convert_pixel_to_gps(Point3D pixel , int  width, int height)
 	{
-		return new Point3D(ORIGIN_LAT - pixel.y()*TOTAL_DISTANCE_Y/height*0.000009060 ,ORIGIN_LON+pixel.x()*TOTAL_DISTANCE_X/width*  0.000012023 , pixel.z());
+		return new Point3D(ORIGIN_LAT - (pixel.y()/height)*(32.106162 - 32.102010) ,ORIGIN_LON+(pixel.x()/width)*(35.212514 - 35.202155) , pixel.z());
 	}
-	public Point3D convert_gps_to_pixel(Point3D gps , int height , int width)
+	public Point3D convert_gps_to_pixel(Point3D gps  , int width , int height)
 	{
-		return new Point3D(width/TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON) /000012023 ,height/TOTAL_DISTANCE_Y*(ORIGIN_LAT-gps.x())/0.000009060 , gps.z());
+		return new Point3D(width*(gps.y() - ORIGIN_LON)/(35.212514 - 35.202155)  ,height*(ORIGIN_LAT-gps.x()/(32.106162 - 32.102010)) , gps.z());
 	}
 	
 	
 	
-	public Point3D convert_meters_to_gps(Point3D pixel)
+	public Point3D convert_meters_to_gps(Point3D meters)
 	{
-		return new Point3D(ORIGIN_LAT - pixel.y()*0.000009060 ,ORIGIN_LON+pixel.x()*0.000012023 , pixel.z());
+		return new Point3D(ORIGIN_LAT - meters.y()/TOTAL_DISTANCE_Y*(32.106162 - 32.102010) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(35.212514 - 35.202155) , meters.z());
 	}
 	public Point3D convert_gps_to_meters(Point3D gps)
 	{
-		return new Point3D((gps.y() - ORIGIN_LON) /000012023 ,(ORIGIN_LAT-gps.x())/0.000009060 , gps.z());
+		return new Point3D(TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON)/(35.212514 - 35.202155) ,TOTAL_DISTANCE_Y*(ORIGIN_LAT-gps.x()/(32.106162 - 32.102010)) , gps.z());
 	}
 	public Point3D edge_until_eat(Point3D start , Point3D end , double range , int height , int width)
 	{
@@ -81,7 +80,21 @@ public class Algorithems {
 		}
 		return csv_game;
 	}
-	
+	public void create_csv_from_game(Game game , String path_file_name) throws IOException
+	{
+        FileWriter fileWriter = new FileWriter(path_file_name);
+        fileWriter.append("Type,id,Lat,Lon,Alt,Speed/Weight,Radius\n");
+        for (Packman packman : game.getPackman_list())
+        {
+        		fileWriter.append("P," + packman.getPackman_id() +"," +packman.getGps().x()  + "," + packman.getGps().y() + "," + packman.getGps().z() + "," + packman.getSpeed() +","  +packman.getRange() +"\n");
+         }
+        for (Fruit fruit : game.getFruit_list())
+        {
+        		fileWriter.append("F," + fruit.getFruit_id() +"," +fruit.getGps().x()  + "," + fruit.getGps().y() + "," + fruit.getGps().z() + "," + fruit.getWeight() +"\n");
+        }
+        fileWriter.flush();
+        fileWriter.close();
+	}
 	public void TSP()
 	{
 		

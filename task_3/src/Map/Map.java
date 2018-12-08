@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Algorithems.Algorithems;
 import Coords.MyCoords;
 import Geom.Point3D;
 
@@ -55,7 +56,8 @@ public class Map  extends JFrame  {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			Point3D end = new Point3D(32.106162 - e.getY()*TOTAL_DISTANCE_Y/getHeight()*0.000009060 ,35.202155+e.getX()*TOTAL_DISTANCE_X/getWidth()*  0.000012023,0);
+			Algorithems algo = new Algorithems();
+			Point3D end = algo.convert_pixel_to_gps(new Point3D(e.getX(),e.getY(),0), getWidth(), getHeight());
 			System.out.println(end);
 			//System.out.println(cord.add(ORIGIN, new Point3D(e.getX()*TOTAL_DISTANCE_X/getWidth() , e.getY()*TOTAL_DISTANCE_Y/getHeight() , 0)));
 //		    int x=e.getX();
