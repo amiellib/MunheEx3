@@ -23,13 +23,13 @@ public class Packman
 		this.gps = gps;
 		this.range = range;
 		this.speed = speed;
-		File pathToFile = new File("resources/packman_image.png");
-		try {
+		File pathToFile = new File("packman.png");
+/*		try {
 			Image packman_image = ImageIO.read(pathToFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	public Packman(int packman_id , Point3D gps, double speed) {
 		this(packman_id , gps,speed,1);
@@ -62,6 +62,13 @@ public class Packman
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
+	public int getPackman_id() {
+		return packman_id;
+	}
+	public void setPackman_id(int packman_id) {
+		this.packman_id = packman_id;
+	}
+	
 	
 
 }

@@ -13,6 +13,18 @@ public class Fruit
 	private int fruit_id;
 	private Point3D Gps;
 	private double weight;
+	public int getFruit_id() {
+		return fruit_id;
+	}
+
+	public void setFruit_id(int fruit_id) {
+		this.fruit_id = fruit_id;
+	}
+
+	public void setGps(Point3D gps) {
+		Gps = gps;
+	}
+
 	private Image fruit_image;
 
 	//	private boolean Eaten;
@@ -26,12 +38,12 @@ public class Fruit
 		this.Gps=new Point3D(gps);
 		this.weight = weight;
 		File pathToFile = new File("resources/fruit.png");
-		try {
+/*		try {
 			Image fruit_image = ImageIO.read(pathToFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public Point3D getGps() {

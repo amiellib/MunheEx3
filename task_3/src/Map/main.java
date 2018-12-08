@@ -9,9 +9,9 @@ public class main {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		Map map = new Map("/Users/shilo/Desktop/map_for_packman.png");
+		Map map = new Map("/Users/shilo/Desktop/data/Ariel1.png");
 		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		map.setSize(1000, 600);
+		map.setSize(1433,642);
 		map.setVisible(true);
 	}
 
