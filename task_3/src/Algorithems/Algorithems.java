@@ -24,11 +24,11 @@ public class Algorithems {
 	final double TOTAL_DISTANCE_ANGEL_LON = CORNER_LON - ORIGIN_LON;
 	final double TOTAL_DISTANCE_ANGEL_LAT = CORNER_LAT - ORIGIN_LAT;
 
-	public Point3D convert_pixel_to_gps(Point3D pixel , int  width, int height)
+	public Point3D convert_pixel_to_gps(Point3D pixel , int height, int  width)
 	{
 		return new Point3D(ORIGIN_LAT + (pixel.y()/height)*(TOTAL_DISTANCE_ANGEL_LAT),ORIGIN_LON+(pixel.x()/width)*(TOTAL_DISTANCE_ANGEL_LON) , pixel.z());
 	}
-	public Point3D convert_gps_to_pixel(Point3D gps  , int width , int height)
+	public Point3D convert_gps_to_pixel(Point3D gps  , int height, int width )
 	{
 		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT/(TOTAL_DISTANCE_ANGEL_LAT)) , gps.z());
 	}
@@ -37,11 +37,11 @@ public class Algorithems {
 	
 	public Point3D convert_meters_to_gps(Point3D meters)
 	{
-		return new Point3D(ORIGIN_LAT - meters.y()/TOTAL_DISTANCE_Y*(32.106162 - 32.102010) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(35.212514 - 35.202155) , meters.z());
+		return new Point3D(ORIGIN_LAT + meters.y()/TOTAL_DISTANCE_Y*(TOTAL_DISTANCE_ANGEL_LAT) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(TOTAL_DISTANCE_ANGEL_LON) , meters.z());
 	}
 	public Point3D convert_gps_to_meters(Point3D gps)
 	{
-		return new Point3D(TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON)/(35.212514 - 35.202155) ,TOTAL_DISTANCE_Y*(ORIGIN_LAT-gps.x()/(32.106162 - 32.102010)) , gps.z());
+		return new Point3D(TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON) ,TOTAL_DISTANCE_Y*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
 	public Point3D edge_until_eat(Point3D start , Point3D end , double range , int height , int width)
 	{

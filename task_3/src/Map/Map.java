@@ -57,7 +57,7 @@ public class Map  extends JFrame  {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Algorithems algo = new Algorithems();
-			Point3D end = algo.convert_pixel_to_gps(new Point3D(e.getX(),e.getY(),0), getWidth(), getHeight());
+			Point3D end = algo.convert_pixel_to_gps(new Point3D(e.getX(),e.getY(),0), getHeight(), getWidth());
 			System.out.println(end);
 			//System.out.println(cord.add(ORIGIN, new Point3D(e.getX()*TOTAL_DISTANCE_X/getWidth() , e.getY()*TOTAL_DISTANCE_Y/getHeight() , 0)));
 //		    int x=e.getX();
