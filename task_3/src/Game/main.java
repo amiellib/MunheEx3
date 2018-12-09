@@ -20,7 +20,7 @@ public class main {
 		game.packman_list.add(new Packman(0, new Point3D(32.10526801,	35.21085983,	0)));
 		game.packman_list.add(new Packman(1, new Point3D(32.1026801,	35.2105983,	0)));
 		game.packman_list.add(new Packman(2, new Point3D(32.106801,	35.25983,	0)));
-		algo.create_csv_from_game(game, "/Users/shilo/Desktop/c_302537394_206328122/game.csv");
+	//	algo.create_csv_from_game(game, "/Users/shilo/Desktop/c_302537394_206328122/game.csv");
 
 
 		
