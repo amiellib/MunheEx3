@@ -99,6 +99,10 @@ public class Algorithems {
         fileWriter.flush();
         fileWriter.close();
 	}
+	
+	
+	
+	
 	public void TSP()
 	{
 		
