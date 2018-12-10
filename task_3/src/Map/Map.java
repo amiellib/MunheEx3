@@ -1,23 +1,31 @@
 package Map;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+
 
 import Algorithems.Algorithems;
 import Fruit.Fruit;
@@ -27,19 +35,32 @@ import Packman.Packman;
 
 public class Map  extends JFrame
 {
+	
+	
+    ArrayList<JLabel> label = new ArrayList<JLabel>(); 
+    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+    
+    JPanel fruits_panel = new JPanel(); 
+
+    
+	JPanel packmans_list = new JPanel();
+	JPanel fruits_list = new JPanel();
 	boolean is_packman = false;
 	boolean is_fruit = false;
 	boolean[] packman_fruit_null = {false,false,true};
 	int fruit_id = 0;
 	int packman_id =0;
 	Game my_game = new Game();
+	
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
 	JMenu fileMenu , game_menu ,speed;
 	JMenuItem refresh , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
 	public Map(String fileName) throws IOException 
 	{
+		
 		super("Pack Man Map");
+		final Image backgroundImage = javax.imageio.ImageIO.read(new File(fileName));		
 
 
 		menuBarstatic = new JMenuBar(); // Window menu bar
@@ -83,7 +104,6 @@ public class Map  extends JFrame
 		fileMenu.add(exit);
 
 		// https://stackoverflow.com/questions/1466240/how-to-set-an-image-as-a-background-for-frame-in-swing-gui-of-java
-		final Image backgroundImage = javax.imageio.ImageIO.read(new File(fileName));		
 		setContentPane(new JPanel(new BorderLayout()) 
 		{
 			@Override 
@@ -92,7 +112,11 @@ public class Map  extends JFrame
 				g.drawImage(backgroundImage, 0, 0,getWidth(), getHeight(), this);
 			}
 		});	
+		
+	
+		
 		add(menuBarstatic , BorderLayout.NORTH);
+
 
 
 
@@ -110,7 +134,25 @@ public class Map  extends JFrame
 		save.addActionListener(handler);
 		new_file.addActionListener(handler);
 		open.addActionListener(handler);
+		
 
+
+	}
+
+	public void paint(Graphics g ,int loc_x , int loc_y){
+		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
+			int w = this.getWidth();
+			int h = this.getHeight();
+			
+	//		g.setClip(loc_x, loc_y, w, h);
+			
+	//		 g.setColor(Color.red);
+	//		 g.fillOval(loc_x, loc_y, w/3, h/3);
+//			g.setColor(Color.blue);
+//			String s = " ["+w+","+h+"]";
+		    g.drawImage(image, loc_x, loc_y, null);
+		   
+		    
 	}
 	public class Handler implements MouseListener , ActionListener , KeyListener{
 
@@ -124,16 +166,26 @@ public class Map  extends JFrame
 				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
 				fruit_id++;
 				System.out.println("fruit ");
-
+				/*				JLabel thumb = new JLabel();
+				thumb.setIcon(icon);
+				thumb.setBounds(e.getX() - getWidth()/10 ,e.getY() - getWidth()/10 ,(int) getWidth()/5, (int) getHeight()/5);
+				label.add(thumb);
+				fruits_panel.add(thumb);
+				add(thumb);
+				add(fruits_panel);
+				thumb.setVisible(true);
+				repaint();
+*/				
 			}
 			else if (is_packman)
 			{
 				my_game.getPackman_list().add(new Packman(packman_id, end , 1 ,1 ));
-				fruit_id++;
+				packman_id++;
 				System.out.println("packman ");
 
 			}
 			System.out.println(end);
+
 
 
 		}
@@ -209,8 +261,9 @@ public class Map  extends JFrame
 			{
 				System.exit(0);
 			}
-			if(e.getSource()==run) {
-
+			if(e.getSource()==run) 
+			{
+				algo.TSP(my_game);
 			}
 			if(e.getSource()==save) 
 			{

@@ -25,6 +25,7 @@ public class Path {
 	public void setLocations(ArrayList<Point3D> locations) {
 		this.locations = locations;
 	}
+	
 	public double get_total_time(int height , int width)
 	{
 		return get_total_distance(height, width)/my_packman.getSpeed();
@@ -37,11 +38,16 @@ public class Path {
 		Point3D current_location = iter.next();
 		while (iter.hasNext())
 		{
-			Point3D temp_location = algorithems.edge_until_eat(current_location, iter.next(), my_packman.getRange(), height, width);
+			Point3D temp_location = algorithems.edge_until_eat(current_location, iter.next(), my_packman.getRange());
 			total_distance += mycoords.distance3d(current_location,temp_location);
 			current_location = temp_location;
 		}
 		return total_distance;
+	}
+	@Override
+	public String toString() {
+		return "Path [algorithems=" + algorithems + ", my_packman=" + my_packman + ", time=" + time + ", locations="
+				+ locations + "]";
 	}
 	
 

@@ -29,6 +29,23 @@ public class Game {
 	public void setSpeed_rate(double speed_rate) {
 		this.speed_rate = speed_rate;
 	}
+	public Game copy()
+	{
+		Game temp_game = new Game();
+		for (Packman this_packman : packman_list)
+		{
+			temp_game.packman_list.add(this_packman);
+		}
+		for (Fruit this_fruit : fruit_list)
+		{
+			temp_game.fruit_list.add(this_fruit);
+		}	
+		return temp_game;
+	}
+	@Override
+	public String toString() {
+		return "Game [fruit_list=" + fruit_list + ", packman_list=" + packman_list + ", speed_rate=" + speed_rate + "]";
+	}
 	
 
 

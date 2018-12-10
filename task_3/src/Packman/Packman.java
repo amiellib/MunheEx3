@@ -68,6 +68,11 @@ public class Packman
 	public void setPackman_id(int packman_id) {
 		this.packman_id = packman_id;
 	}
+	@Override
+	public String toString() {
+		return "Packman [packman_id=" + packman_id + ", gps=" + gps + ", range=" + range + ", speed=" + speed
+				+ ", packman_image=" + packman_image + "]";
+	}
 	
 	
 
