@@ -51,6 +51,7 @@ public class Map  extends JFrame
 	int fruit_id = 0;
 	int packman_id =0;
 	Game my_game = new Game();
+	private Image backgroundImage;
 	
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
@@ -60,7 +61,7 @@ public class Map  extends JFrame
 	{
 		
 		super("Pack Man Map");
-		final Image backgroundImage = javax.imageio.ImageIO.read(new File(fileName));		
+		backgroundImage = javax.imageio.ImageIO.read(new File(fileName));		
 
 
 		menuBarstatic = new JMenuBar(); // Window menu bar
@@ -104,14 +105,7 @@ public class Map  extends JFrame
 		fileMenu.add(exit);
 
 		// https://stackoverflow.com/questions/1466240/how-to-set-an-image-as-a-background-for-frame-in-swing-gui-of-java
-		setContentPane(new JPanel(new BorderLayout()) 
-		{
-			@Override 
-			public void paintComponent(Graphics g) 
-			{
-				g.drawImage(backgroundImage, 0, 0,getWidth(), getHeight(), this);
-			}
-		});	
+
 		
 	
 		
@@ -139,18 +133,19 @@ public class Map  extends JFrame
 
 	}
 
-	public void paint(Graphics g ,int loc_x , int loc_y){
+	public void paint(Graphics g)
+	{
 		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
+			g.drawImage(backgroundImage, 0, 0,getWidth(), getHeight(), this);
 			int w = this.getWidth();
-			int h = this.getHeight();
-			
+			int h = this.getHeight();	
 	//		g.setClip(loc_x, loc_y, w, h);
 			
 	//		 g.setColor(Color.red);
 	//		 g.fillOval(loc_x, loc_y, w/3, h/3);
 //			g.setColor(Color.blue);
 //			String s = " ["+w+","+h+"]";
-		    g.drawImage(image, loc_x, loc_y, null);
+	//	    g.drawImage(image, loc_x, loc_y, null);
 		   
 		    
 	}
