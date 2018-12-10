@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import Coords.MyCoords;
 import Game.Game;
@@ -43,23 +44,25 @@ public class Algorithems {
 	{
 		return new Point3D(TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON) ,TOTAL_DISTANCE_Y*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
-	public Point3D edge_until_eat(Point3D start , Point3D end , double range , int height , int width)
+	public Point3D edge_until_eat(Point3D start , Point3D end , double range)
 	{
 		Point3D meters_start = convert_gps_to_meters(start);
 		Point3D meters_end = convert_gps_to_meters(end);
 		Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
-		double totalD =  Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.x());
+		double totalD =  Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.z());
 
 				
 		
 		double t = (totalD - range)/totalD;
 		Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
-		double x_pixel_per_meter = width / TOTAL_DISTANCE_X;
+		return cord.add(start, newvec);
+		
+/*		double x_pixel_per_meter = width / TOTAL_DISTANCE_X;
 		double y_pixel_per_meter = height / TOTAL_DISTANCE_Y;
 		Point3D final_point = new Point3D(newvec.x()*x_pixel_per_meter , newvec.y() *y_pixel_per_meter , newvec.z());
 		
 		return new Point3D(convert_pixel_to_gps(final_point , height , width));
-		
+	*/	
 	}
 	
 	public Game get_data_from_csv(String path_of_csv) throws IOException
@@ -103,8 +106,57 @@ public class Algorithems {
 	
 	
 	
-	public void TSP()
+	public void TSP(Game game)
 	{
-		
-	};
+
+		Path[] paths = new Path [game.getPackman_list().size()];
+		int counter =0;
+		for (Packman this_packman : game.getPackman_list())
+		{
+			paths[counter] = new Path(this_packman);
+			counter++;
+		}
+		Game temp_game = game.copy();
+		for (int i =0;i<game.getFruit_list().size();i++)
+		{
+			MatrixMin matrixmin = get_matrix_min(temp_game);
+			Point3D fruit_edge = edge_until_eat(paths[matrixmin.column].getLocations().get(paths[matrixmin.column].getLocations().size()-1) , temp_game.getFruit_list().get(matrixmin.row).getGps() ,game.getPackman_list().get(matrixmin.column).getRange() );
+			paths[matrixmin.column].getLocations().add(fruit_edge);		
+			temp_game.getPackman_list().get(matrixmin.column).setGps(fruit_edge);
+			temp_game.getFruit_list().remove(matrixmin.row).getGps();
+		}
+/*		for(Path path : paths)
+		{
+			System.out.println(path);
+		}
+*/		
+	}
+	
+	
+	
+	public MatrixMin get_matrix_min(Game game)
+	{
+//		double[][] matrix =new double [game.getPackman_list().size()][game.getFruit_list().size()] ;
+		double value;
+		int i=0;
+		int j=0;
+		MatrixMin matrixmin = new MatrixMin(99999999,0,0);
+		for (Packman this_packman : game.getPackman_list())
+		{
+			for (Fruit this_fruit : game.getFruit_list())
+			{
+				value = cord.distance3d(this_packman.getGps(), this_fruit.getGps())/this_packman.getSpeed();
+				if (matrixmin.getMin_value()>value)
+				{
+					matrixmin.setColumn(i);
+					matrixmin.setRow(j);
+					matrixmin.setMin_value(value);
+				}	
+				j++;
+			}
+			i++;
+			j=0;
+		}
+		return matrixmin;
+	}
 }
