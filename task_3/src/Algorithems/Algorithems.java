@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import Coords.MyCoords;
 import Game.Game;
@@ -46,6 +47,8 @@ public class Algorithems {
 	}
 	public Point3D edge_until_eat(Point3D start , Point3D end , double range)
 	{
+		if(cord.distance3d(start, end)<=range)
+			return start;
 		Point3D meters_start = convert_gps_to_meters(start);
 		Point3D meters_end = convert_gps_to_meters(end);
 		Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
@@ -55,7 +58,8 @@ public class Algorithems {
 		
 		double t = (totalD - range)/totalD;
 		Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
-		return cord.add(start, newvec);
+		Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
+		return convert_meters_to_gps(final_point_meters);
 		
 /*		double x_pixel_per_meter = width / TOTAL_DISTANCE_X;
 		double y_pixel_per_meter = height / TOTAL_DISTANCE_Y;
@@ -75,11 +79,11 @@ public class Algorithems {
 			if((line.replaceAll(",","")).replaceAll(" ","").isEmpty())
 				break;
 			String[] row = line.split(",");
-			if (row[0]=="P")
+			if (row[0].equals("P"))
 			{
 				csv_game.getPackman_list().add(new Packman(Integer.parseInt(row[1]) , new Point3D(Double.parseDouble(row[2]) , Double.parseDouble(row[3]) , Double.parseDouble(row[4])) , Double.parseDouble(row[5]) , Double.parseDouble(row[6])));
 			}
-			else if (row[0]=="F")
+			else if (row[0].equals("F"))
 			{
 				csv_game.getFruit_list().add(new Fruit(Integer.parseInt(row[1]) , new Point3D(Double.parseDouble(row[2]) , Double.parseDouble(row[3]) , Double.parseDouble(row[4])) , Double.parseDouble(row[5])));
 			}	
@@ -121,15 +125,53 @@ public class Algorithems {
 		{
 			MatrixMin matrixmin = get_matrix_min(temp_game);
 			Point3D fruit_edge = edge_until_eat(paths[matrixmin.column].getLocations().get(paths[matrixmin.column].getLocations().size()-1) , temp_game.getFruit_list().get(matrixmin.row).getGps() ,game.getPackman_list().get(matrixmin.column).getRange() );
-			paths[matrixmin.column].getLocations().add(fruit_edge);		
+			paths[matrixmin.column].getLocations().add(fruit_edge);
 			temp_game.getPackman_list().get(matrixmin.column).setGps(fruit_edge);
 			temp_game.getFruit_list().remove(matrixmin.row).getGps();
 		}
-/*		for(Path path : paths)
+		Path path1 , path2;
+		for (int i =0 ; i<1000 ; i++)
+		{
+			Random randomNum = new Random();
+			int firstpackman = randomNum.nextInt(game.getPackman_list().size()-1);
+			int secondpackman = randomNum.nextInt(game.getPackman_list().size()-1);
+			path1 = paths[firstpackman].copy();
+			path2 = paths[secondpackman].copy();
+			double first_path_time = path1.get_total_time();	
+			double second_path_time = path2.get_total_time();
+	//		double max = (second_path_time>first_path_time) ? second_path_time : first_path_time;
+			if (first_path_time>second_path_time)
+			{
+				int firstfruit = 1 + randomNum.nextInt(path1.getLocations().size()-1);
+				path2.locations.add(path1.locations.remove(firstfruit));
+				if (path2.get_total_time()<first_path_time)
+				{
+					paths[firstpackman] = path1.copy();
+					paths[secondpackman] = path2.copy();
+				}
+			}
+			else if (first_path_time<second_path_time)
+			{
+				int secondfruit = 1 + randomNum.nextInt(path2.getLocations().size()-1);
+				path1.locations.add(path2.locations.remove(secondfruit));
+				if (path1.get_total_time()<second_path_time)
+				{
+					paths[firstpackman] = path1.copy();
+					paths[secondpackman] = path2.copy();
+				}
+			}
+			
+			
+
+		}
+
+		for(Path path : paths)
 		{
 			System.out.println(path);
+			System.out.println(path.get_total_time());
 		}
-*/		
+		
+		
 	}
 	
 	
