@@ -283,7 +283,8 @@ public class Map  extends JFrame
 			}
 			if(e.getSource()==new_file) 
 			{
-				
+				my_game.getFruit_list().clear();
+				my_game.getPackman_list().clear();
 			}
 			if(e.getSource()==open) {
 				try {
