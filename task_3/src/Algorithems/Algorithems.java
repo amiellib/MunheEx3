@@ -34,9 +34,9 @@ public class Algorithems {
 	{
 		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT/(TOTAL_DISTANCE_ANGEL_LAT)) , gps.z());
 	}
-	
-	
-	
+
+
+
 	public Point3D convert_meters_to_gps(Point3D meters)
 	{
 		return new Point3D(ORIGIN_LAT + meters.y()/TOTAL_DISTANCE_Y*(TOTAL_DISTANCE_ANGEL_LAT) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(TOTAL_DISTANCE_ANGEL_LON) , meters.z());
@@ -54,21 +54,21 @@ public class Algorithems {
 		Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
 		double totalD =  Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.z());
 
-				
-		
+
+
 		double t = (totalD - range)/totalD;
 		Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
 		Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
 		return convert_meters_to_gps(final_point_meters);
-		
-/*		double x_pixel_per_meter = width / TOTAL_DISTANCE_X;
+
+		/*		double x_pixel_per_meter = width / TOTAL_DISTANCE_X;
 		double y_pixel_per_meter = height / TOTAL_DISTANCE_Y;
 		Point3D final_point = new Point3D(newvec.x()*x_pixel_per_meter , newvec.y() *y_pixel_per_meter , newvec.z());
-		
+
 		return new Point3D(convert_pixel_to_gps(final_point , height , width));
-	*/	
+		 */	
 	}
-	
+
 	public Game get_data_from_csv(String path_of_csv) throws IOException
 	{
 		Game csv_game = new Game();	
@@ -93,96 +93,172 @@ public class Algorithems {
 	}
 	public void create_csv_from_game(Game game , String path_file_name) throws IOException
 	{
-        FileWriter fileWriter = new FileWriter(path_file_name);
-        fileWriter.append("Type,id,Lat,Lon,Alt,Speed/Weight,Radius\n");
-        for (Packman packman : game.getPackman_list())
-        {
-        		fileWriter.append("P," + packman.getPackman_id() +"," +packman.getGps().x()  + "," + packman.getGps().y() + "," + packman.getGps().z() + "," + packman.getSpeed() +","  +packman.getRange() +"\n");
-         }
-        for (Fruit fruit : game.getFruit_list())
-        {
-        		fileWriter.append("F," + fruit.getFruit_id() +"," +fruit.getGps().x()  + "," + fruit.getGps().y() + "," + fruit.getGps().z() + "," + fruit.getWeight() +"\n");
-        }
-        fileWriter.flush();
-        fileWriter.close();
+		FileWriter fileWriter = new FileWriter(path_file_name);
+		fileWriter.append("Type,id,Lat,Lon,Alt,Speed/Weight,Radius\n");
+		for (Packman packman : game.getPackman_list())
+		{
+			fileWriter.append("P," + packman.getPackman_id() +"," +packman.getGps().x()  + "," + packman.getGps().y() + "," + packman.getGps().z() + "," + packman.getSpeed() +","  +packman.getRange() +"\n");
+		}
+		for (Fruit fruit : game.getFruit_list())
+		{
+			fileWriter.append("F," + fruit.getFruit_id() +"," +fruit.getGps().x()  + "," + fruit.getGps().y() + "," + fruit.getGps().z() + "," + fruit.getWeight() +"\n");
+		}
+		fileWriter.flush();
+		fileWriter.close();
 	}
-	
-	
-	
-	
-	public void TSP(Game game)
+
+
+
+
+	public Path[] TSP(Game game)
 	{
 
-		Path[] paths = new Path [game.getPackman_list().size()];
+		Path[] paths_greedy_free = new Path [game.getPackman_list().size()];
 		int counter =0;
 		for (Packman this_packman : game.getPackman_list())
 		{
-			paths[counter] = new Path(this_packman);
+			paths_greedy_free[counter] = new Path(this_packman);
 			counter++;
 		}
 		Game temp_game = game.copy();
+		double[] time_gone = new double [game.getPackman_list().size()];
+		for(int i=0;i<game.getPackman_list().size(); i++)
+			time_gone[i]=0;
 		for (int i =0;i<game.getFruit_list().size();i++)
 		{
-			MatrixMin matrixmin = get_matrix_min(temp_game);
-			Point3D fruit_edge = edge_until_eat(paths[matrixmin.column].getLocations().get(paths[matrixmin.column].getLocations().size()-1) , temp_game.getFruit_list().get(matrixmin.row).getGps() ,game.getPackman_list().get(matrixmin.column).getRange() );
-			paths[matrixmin.column].getLocations().add(fruit_edge);
+
+			int[] array_min = get_matrix_min(temp_game).array_min;
+			double[][] matrix = get_matrix_min(temp_game).matrix;
+			double time_min = time_gone[0] +matrix[0][array_min[0]];
+			int packman_to_put = 0;
+			for(int j=1;j<game.getPackman_list().size();j++)
+			{
+				if (time_gone[j] +matrix[j][array_min[j]]<time_min)
+				{
+					packman_to_put = j;
+				}
+			}			
+			time_gone[packman_to_put] += matrix[packman_to_put][array_min[packman_to_put]];
+			Point3D fruit_edge = edge_until_eat(paths_greedy_free[packman_to_put].getLocations().get(paths_greedy_free[packman_to_put].getLocations().size()-1) , temp_game.getFruit_list().get(array_min[packman_to_put]).getGps() ,game.getPackman_list().get(packman_to_put).getRange() );			
+			paths_greedy_free[packman_to_put].getLocations().add(fruit_edge);
+			temp_game.getPackman_list().get(packman_to_put).setGps(fruit_edge);
+			temp_game.getFruit_list().remove(array_min[packman_to_put]).getGps();
+		}
+
+
+
+
+		Path path1 , path2;
+		System.out.println(game);
+		if (game.getPackman_list().size()>1)
+		{
+
+
+			for (int i =0 ; i<10 ; i++)
+			{
+				Random randomNum = new Random();
+				int firstpackman = randomNum.nextInt(game.getPackman_list().size()-1);
+				int secondpackman = randomNum.nextInt(game.getPackman_list().size()-1);
+				path1 = paths_greedy_free[firstpackman].copy();
+				path2 = paths_greedy_free[secondpackman].copy();
+				double first_path_time = path1.get_total_time();	
+				double second_path_time = path2.get_total_time();
+				//		double max = (second_path_time>first_path_time) ? second_path_time : first_path_time;
+
+				if (first_path_time>second_path_time)
+				{
+					int firstfruit = 1 + randomNum.nextInt(path1.getLocations().size()-1);
+					path2.locations.add(path1.locations.remove(firstfruit));
+					if (path2.get_total_time()<first_path_time)
+					{
+						paths_greedy_free[firstpackman] = path1.copy();
+						paths_greedy_free[secondpackman] = path2.copy();
+					}
+				}
+				else if (first_path_time<second_path_time)
+				{
+					int secondfruit = 1 + randomNum.nextInt(path2.getLocations().size()-1);
+					path1.locations.add(path2.locations.remove(secondfruit));
+					if (path1.get_total_time()<second_path_time)
+					{
+						paths_greedy_free[firstpackman] = path1.copy();
+						paths_greedy_free[secondpackman] = path2.copy();
+					}
+				}
+
+			}
+		}
+		double max_greedy_free=0;
+		for(Path path : paths_greedy_free)
+		{
+			//			System.out.println(path);
+			System.out.println(path.get_total_time());
+			if(max_greedy_free<path.get_total_time())
+			{
+				max_greedy_free = path.get_total_time();
+			}
+		}
+		Path[] paths_greedy = new Path [game.getPackman_list().size()];
+		counter =0;
+		for (Packman this_packman : game.getPackman_list())
+		{
+			paths_greedy[counter] = new Path(this_packman);
+			counter++;
+		}
+		temp_game = game.copy();
+
+		for (int i =0;i<game.getFruit_list().size();i++)
+		{
+			Matrix_single_min matrixmin = get_matrix_min_single(temp_game);
+			Point3D fruit_edge = edge_until_eat(paths_greedy[matrixmin.column].getLocations().get(paths_greedy[matrixmin.column].getLocations().size()-1) , temp_game.getFruit_list().get(matrixmin.row).getGps() ,game.getPackman_list().get(matrixmin.column).getRange() );
+			paths_greedy[matrixmin.column].getLocations().add(fruit_edge);		
 			temp_game.getPackman_list().get(matrixmin.column).setGps(fruit_edge);
 			temp_game.getFruit_list().remove(matrixmin.row).getGps();
 		}
-		Path path1 , path2;
-		for (int i =0 ; i<1000 ; i++)
+		//greedy
+		double max_greedy=0;
+		for(Path path : paths_greedy)
 		{
-			Random randomNum = new Random();
-			int firstpackman = randomNum.nextInt(game.getPackman_list().size()-1);
-			int secondpackman = randomNum.nextInt(game.getPackman_list().size()-1);
-			path1 = paths[firstpackman].copy();
-			path2 = paths[secondpackman].copy();
-			double first_path_time = path1.get_total_time();	
-			double second_path_time = path2.get_total_time();
-	//		double max = (second_path_time>first_path_time) ? second_path_time : first_path_time;
-			if (first_path_time>second_path_time)
-			{
-				int firstfruit = 1 + randomNum.nextInt(path1.getLocations().size()-1);
-				path2.locations.add(path1.locations.remove(firstfruit));
-				if (path2.get_total_time()<first_path_time)
-				{
-					paths[firstpackman] = path1.copy();
-					paths[secondpackman] = path2.copy();
-				}
-			}
-			else if (first_path_time<second_path_time)
-			{
-				int secondfruit = 1 + randomNum.nextInt(path2.getLocations().size()-1);
-				path1.locations.add(path2.locations.remove(secondfruit));
-				if (path1.get_total_time()<second_path_time)
-				{
-					paths[firstpackman] = path1.copy();
-					paths[secondpackman] = path2.copy();
-				}
-			}
-			
-			
-
-		}
-
-		for(Path path : paths)
-		{
-			System.out.println(path);
+			//			System.out.println(path);
 			System.out.println(path.get_total_time());
+			if(max_greedy<path.get_total_time())
+			{
+				max_greedy = path.get_total_time();
+			}
 		}
-		
-		
+		return (max_greedy>max_greedy_free) ? paths_greedy : paths_greedy_free;
 	}
-	
-	
-	
-	public MatrixMin get_matrix_min(Game game)
+
+	public MatrixMin get_matrix_min(Game game )
 	{
-//		double[][] matrix =new double [game.getPackman_list().size()][game.getFruit_list().size()] ;
+
+		double min_value;
+		MatrixMin matrixmin = new MatrixMin(new double [game.getPackman_list().size()][game.getFruit_list().size()],new int [game.getPackman_list().size()]);
+		for (int i = 0; i<game.getPackman_list().size();i++)
+		{
+			min_value =cord.distance3d(game.getPackman_list().get(i).getGps(), game.getPackman_list().get(0).getGps())/game.getPackman_list().get(i).getSpeed();
+			matrixmin.matrix[i][0] =  cord.distance3d(game.getPackman_list().get(i).getGps(), game.getFruit_list().get(0).getGps())/game.getPackman_list().get(i).getSpeed();
+			matrixmin.array_min[i]=0;		
+			for (int j = 1; j<game.getFruit_list().size();j++)
+			{
+				matrixmin.matrix[i][j] = cord.distance3d(game.getPackman_list().get(i).getGps(), game.getFruit_list().get(j).getGps())/game.getPackman_list().get(i).getSpeed();
+				if(min_value>matrixmin.matrix[i][j])
+				{
+					matrixmin.array_min[i] = j;
+					min_value = matrixmin.matrix[i][j];
+				}
+
+			}
+		}
+		return matrixmin;
+	}
+	public Matrix_single_min get_matrix_min_single(Game game)
+	{
+		//		double[][] matrix =new double [game.getPackman_list().size()][game.getFruit_list().size()] ;
 		double value;
 		int i=0;
 		int j=0;
-		MatrixMin matrixmin = new MatrixMin(99999999,0,0);
+		Matrix_single_min matrixmin = new Matrix_single_min(99999999,0,0);
 		for (Packman this_packman : game.getPackman_list())
 		{
 			for (Fruit this_fruit : game.getFruit_list())
@@ -201,4 +277,5 @@ public class Algorithems {
 		}
 		return matrixmin;
 	}
+
 }
