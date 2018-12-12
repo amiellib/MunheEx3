@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 
 
 import Algorithems.Algorithems;
+import Algorithems.Path;
 import Fruit.Fruit;
 import Game.Game;
 import Geom.Point3D;
@@ -38,14 +39,14 @@ import Packman.Packman;
 
 public class Map  extends JFrame
 {
-	
-	
-    ArrayList<JLabel> label = new ArrayList<JLabel>(); 
-//    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
-    
-    JPanel fruits_panel = new JPanel(); 
 
-    
+
+	ArrayList<JLabel> label = new ArrayList<JLabel>(); 
+	//    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+
+	JPanel fruits_panel = new JPanel(); 
+	private int color_counter =0;
+	Color[] colors = {Color.BLACK , Color.BLUE , Color.cyan , Color.GREEN , Color.GRAY , Color.MAGENTA ,Color.YELLOW ,Color.WHITE};
 	JPanel packmans_list = new JPanel();
 	JPanel fruits_list = new JPanel();
 	boolean is_packman = false;
@@ -55,16 +56,23 @@ public class Map  extends JFrame
 	int packman_id =0;
 	Game my_game = new Game();
 	private BufferedImage backgroundImage;
-	
+	private BufferedImage fruit_image;
+	private BufferedImage packman_image;
+	private boolean run_program = false;
+	private Path [] paths;
+
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
 	JMenu fileMenu , game_menu ,speed;
 	JMenuItem refresh , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
 	public Map(String fileName) throws IOException 
 	{
-		
+
 		super("Pack Man Map");
-		backgroundImage = ImageIO.read(new File(fileName));		
+		backgroundImage = ImageIO.read(new File(fileName));
+		fruit_image = ImageIO.read(new File("src/fruit.png"));		
+		packman_image = ImageIO.read(new File("src/packman.png"));		
+
 
 		JPanel bar = new JPanel();
 		menuBarstatic = new JMenuBar(); // Window menu bar
@@ -107,13 +115,6 @@ public class Map  extends JFrame
 		fileMenu.add(run);
 		fileMenu.add(exit);
 		bar.add(menuBarstatic);
-		// https://stackoverflow.com/questions/1466240/how-to-set-an-image-as-a-background-for-frame-in-swing-gui-of-java
-
-	//	add(menuBarstatic , BorderLayout.NORTH);
-
-
-//		setJMenuBar(menuBarstatic);
-
 
 
 
@@ -132,39 +133,68 @@ public class Map  extends JFrame
 		open.addActionListener(handler);
 
 	}
-
+	public Color get_color()
+	{
+		color_counter ++;
+		if (color_counter>=colors.length)
+		{
+			color_counter =0;
+		}
+		return colors[color_counter];
+	}
 	public void paint(Graphics g)
 	{
 		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
 		g.drawImage(scaledImage, 0, 0, null);
 		setJMenuBar(menuBarstatic);
+		for (Fruit fruit : my_game.getFruit_list())
+		{
+			g.drawImage(fruit_image,(int) (algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
 
+		}
+		for(Packman packman :my_game.getPackman_list())
+		{
+			g.drawImage(packman_image,(int) (algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
+		}
+		if (run_program)
+		{
+			for(Path path :paths)
+			{
+				g.setColor(get_color());
+				for(int i=0;i<path.getLocations().size()-1;i++)
+				{
+					Point3D start = algo.convert_gps_to_pixel(path.getLocations().get(i), getHeight(), getWidth());
+					Point3D end = algo.convert_gps_to_pixel(path.getLocations().get(i+1), getHeight(), getWidth());
+					g.drawLine((int)start.x(), (int)start.y(), (int)end.x(),(int) end.y());
+				}
+			}
+		}
 
 	}
-	
-	
-//	public void paintComponent(Graphics g)
-//	{
-//		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
-//		 g.drawImage(backgroundImage, 0, 0, getWidth(),getHeight(), this);
 
-   //    paintComponent(g);
-  //      g.drawImage(image, 0, 0, null);
-//			g.drawImage(backgroundImage, 0, 0, this);
-//			int w = this.getWidth();
-//			int h = this.getHeight();	
-//			add(menuBarstatic , BorderLayout.NORTH);
+
+	//	public void paintComponent(Graphics g)
+	//	{
+	//		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
+	//		 g.drawImage(backgroundImage, 0, 0, getWidth(),getHeight(), this);
+
+	//    paintComponent(g);
+	//      g.drawImage(image, 0, 0, null);
+	//			g.drawImage(backgroundImage, 0, 0, this);
+	//			int w = this.getWidth();
+	//			int h = this.getHeight();	
+	//			add(menuBarstatic , BorderLayout.NORTH);
 
 	//		g.setClip(loc_x, loc_y, w, h);
-			
+
 	//		 g.setColor(Color.red);
 	//		 g.fillOval(loc_x, loc_y, w/3, h/3);
-//			g.setColor(Color.blue);
-//			String s = " ["+w+","+h+"]";
+	//			g.setColor(Color.blue);
+	//			String s = " ["+w+","+h+"]";
 	//	    g.drawImage(image, loc_x, loc_y, null);
-		   
-		    
-//	}
+
+
+	//	}
 	public class Handler implements MouseListener , ActionListener , KeyListener{
 
 
@@ -186,7 +216,7 @@ public class Map  extends JFrame
 				add(fruits_panel);
 				thumb.setVisible(true);
 				repaint();
-*/				
+				 */				
 			}
 			else if (is_packman)
 			{
@@ -274,28 +304,31 @@ public class Map  extends JFrame
 			}
 			if(e.getSource()==run) 
 			{
-				algo.TSP(my_game);
+				paths = algo.TSP(my_game);
+				repaint();
+				run_program =true;
+
 			}
 			if(e.getSource()==save) 
 			{
 				try {
-				JFrame parentFrame = new JFrame();
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Specify a file to save");
-				int userSelection = fileChooser.showSaveDialog(parentFrame);
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-				    File fileToSave = fileChooser.getSelectedFile();
-					algo.create_csv_from_game(my_game, fileToSave.toString());
-				    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+					JFrame parentFrame = new JFrame();
+					JFileChooser fileChooser = new JFileChooser();
+					fileChooser.setDialogTitle("Specify a file to save");
+					int userSelection = fileChooser.showSaveDialog(parentFrame);
+					if (userSelection == JFileChooser.APPROVE_OPTION) {
+						File fileToSave = fileChooser.getSelectedFile();
+						algo.create_csv_from_game(my_game, fileToSave.toString());
+						System.out.println("Save as file: " + fileToSave.getAbsolutePath());
 
-				}
+					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
-				
-			
+
+
 			}
 			if(e.getSource()==new_file) 
 			{
@@ -309,16 +342,16 @@ public class Map  extends JFrame
 					fileChooser.setDialogTitle("Specify a file to open");
 					int userSelection = fileChooser.showOpenDialog(parentFrame);
 					if (userSelection == JFileChooser.APPROVE_OPTION) {
-					    File fileToLoad = fileChooser.getSelectedFile();
+						File fileToLoad = fileChooser.getSelectedFile();
 						my_game = algo.get_data_from_csv(fileToLoad.toString());
-					    System.out.println("opened file: " + fileToLoad.getAbsolutePath());
+						System.out.println("opened file: " + fileToLoad.getAbsolutePath());
+						repaint();
 
 					}
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 			}
 
