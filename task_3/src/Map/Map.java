@@ -13,11 +13,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,7 +41,7 @@ public class Map  extends JFrame
 	
 	
     ArrayList<JLabel> label = new ArrayList<JLabel>(); 
-    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+//    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
     
     JPanel fruits_panel = new JPanel(); 
 
@@ -51,7 +54,7 @@ public class Map  extends JFrame
 	int fruit_id = 0;
 	int packman_id =0;
 	Game my_game = new Game();
-	private Image backgroundImage;
+	private BufferedImage backgroundImage;
 	
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
@@ -61,9 +64,9 @@ public class Map  extends JFrame
 	{
 		
 		super("Pack Man Map");
-		backgroundImage = javax.imageio.ImageIO.read(new File(fileName));		
+		backgroundImage = ImageIO.read(new File(fileName));		
 
-
+		JPanel bar = new JPanel();
 		menuBarstatic = new JMenuBar(); // Window menu bar
 
 
@@ -103,14 +106,13 @@ public class Map  extends JFrame
 		fileMenu.add(save);
 		fileMenu.add(run);
 		fileMenu.add(exit);
-
+		bar.add(menuBarstatic);
 		// https://stackoverflow.com/questions/1466240/how-to-set-an-image-as-a-background-for-frame-in-swing-gui-of-java
 
-		
-	
-		
-		add(menuBarstatic , BorderLayout.NORTH);
+	//	add(menuBarstatic , BorderLayout.NORTH);
 
+
+//		setJMenuBar(menuBarstatic);
 
 
 
@@ -128,17 +130,31 @@ public class Map  extends JFrame
 		save.addActionListener(handler);
 		new_file.addActionListener(handler);
 		open.addActionListener(handler);
-		
-
 
 	}
 
 	public void paint(Graphics g)
 	{
-		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
-			g.drawImage(backgroundImage, 0, 0,getWidth(), getHeight(), this);
-			int w = this.getWidth();
-			int h = this.getHeight();	
+		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
+		g.drawImage(scaledImage, 0, 0, null);
+		setJMenuBar(menuBarstatic);
+
+
+	}
+	
+	
+//	public void paintComponent(Graphics g)
+//	{
+//		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
+//		 g.drawImage(backgroundImage, 0, 0, getWidth(),getHeight(), this);
+
+   //    paintComponent(g);
+  //      g.drawImage(image, 0, 0, null);
+//			g.drawImage(backgroundImage, 0, 0, this);
+//			int w = this.getWidth();
+//			int h = this.getHeight();	
+//			add(menuBarstatic , BorderLayout.NORTH);
+
 	//		g.setClip(loc_x, loc_y, w, h);
 			
 	//		 g.setColor(Color.red);
@@ -148,7 +164,7 @@ public class Map  extends JFrame
 	//	    g.drawImage(image, loc_x, loc_y, null);
 		   
 		    
-	}
+//	}
 	public class Handler implements MouseListener , ActionListener , KeyListener{
 
 
