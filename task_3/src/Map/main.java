@@ -9,6 +9,7 @@ public class main
 		// TODO Auto-generated method stub
 		
 		Map map = new Map("src/Ariel1.png");	
+	//	MyFrame map = new MyFrame();
 		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		map.setSize(1433,642);
 		map.setVisible(true);
