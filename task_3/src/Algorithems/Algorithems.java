@@ -31,7 +31,7 @@ public class Algorithems {
 	}
 	public Point3D convert_gps_to_pixel(Point3D gps  , int height, int width )
 	{
-		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT/(TOTAL_DISTANCE_ANGEL_LAT)) , gps.z());
+		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
 
 	public Point3D convert_meters_to_gps(Point3D meters)
@@ -149,6 +149,7 @@ public class Algorithems {
 				max_greedy_free = path.get_total_time();
 			}
 		}
+		//greedy
 		System.out.println("greedy");
 		Path[] paths_greedy = new Path [game.getPackman_list().size()];
 		counter =0;
@@ -169,7 +170,6 @@ public class Algorithems {
 		}
 		for (int i=0;i<50;i++)
 			paths_greedy = adjustments(paths_greedy);
-		//greedy
 		double max_greedy=0;
 		for(Path path : paths_greedy)
 		{
@@ -179,7 +179,7 @@ public class Algorithems {
 			}
 			System.out.println(path.get_total_time());
 		}			
-		return (max_greedy>max_greedy_free) ? paths_greedy : paths_greedy_free;
+		return (max_greedy>max_greedy_free) ?   paths_greedy_free : paths_greedy;
 	}
 
 	public MatrixMin get_matrix_min(Game game )
