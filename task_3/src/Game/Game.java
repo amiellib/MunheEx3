@@ -34,11 +34,11 @@ public class Game {
 		Game temp_game = new Game();
 		for (Packman this_packman : packman_list)
 		{
-			temp_game.packman_list.add(this_packman);
+			temp_game.packman_list.add(new Packman (this_packman.getPackman_id() ,this_packman.getGps() , this_packman.getSpeed() ,this_packman.getRange()) );
 		}
 		for (Fruit this_fruit : fruit_list)
 		{
-			temp_game.fruit_list.add(this_fruit);
+			temp_game.fruit_list.add(new Fruit (this_fruit.getFruit_id() , this_fruit.getGps() , this_fruit.getWeight()));
 		}	
 		return temp_game;
 	}
