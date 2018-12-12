@@ -167,7 +167,7 @@ public class Algorithems {
 			temp_game.getPackman_list().get(matrixmin.column).setGps(fruit_edge);
 			temp_game.getFruit_list().remove(matrixmin.row).getGps();
 		}
-		for (int i=0;i<10;i++)
+		for (int i=0;i<50;i++)
 			paths_greedy = adjustments(paths_greedy);
 		//greedy
 		double max_greedy=0;
@@ -189,7 +189,7 @@ public class Algorithems {
 		MatrixMin matrixmin = new MatrixMin(new double [game.getPackman_list().size()][game.getFruit_list().size()],new int [game.getPackman_list().size()]);
 		for (int i = 0; i<game.getPackman_list().size();i++)
 		{
-			min_value =cord.distance3d(game.getPackman_list().get(i).getGps(), game.getPackman_list().get(0).getGps())/game.getPackman_list().get(i).getSpeed();
+			min_value =cord.distance3d(game.getPackman_list().get(i).getGps(), game.getFruit_list().get(0).getGps())/game.getPackman_list().get(i).getSpeed();
 			matrixmin.matrix[i][0] =  cord.distance3d(game.getPackman_list().get(i).getGps(), game.getFruit_list().get(0).getGps())/game.getPackman_list().get(i).getSpeed();
 			matrixmin.array_min[i]=0;		
 			for (int j = 1; j<game.getFruit_list().size();j++)
