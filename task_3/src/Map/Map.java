@@ -46,6 +46,7 @@ public class Map  extends JFrame
 	private int fruit_counter = 0;
 	Color[] colors = {Color.BLACK , Color.BLUE , Color.cyan , Color.GREEN , Color.GRAY , Color.MAGENTA ,Color.YELLOW ,Color.WHITE};
 	String[] fruits = {"src/fruit.png" , "src/fruit2.png" ,"src/fruit3.png" ,"src/fruit4.png" ,"src/fruit5.png"};
+	String[] packmans = {"src/packman_eating_3.jpeg" , "src/packman_eating2.png" ,"src/packman_eating1.png" , "src/packman_eating2.png" };
 	JPanel packmans_list = new JPanel();
 	JPanel fruits_list = new JPanel();
 	boolean is_packman = false;
@@ -53,12 +54,17 @@ public class Map  extends JFrame
 	boolean[] packman_fruit_null = {false,false,true};
 	int fruit_id = 0;
 	int packman_id =0;
+	int packman_counter =0;
 	Game my_game = new Game();
 	private BufferedImage backgroundImage;
 	private BufferedImage fruit_image;
 	private BufferedImage packman_image;
+	private BufferedImage packman_image_eating;
+	private BufferedImage packman_image_eating_temp;
+
 	private boolean run_program = false;
 	private Path [] paths;
+	private int global_time;
 
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
@@ -80,7 +86,7 @@ public class Map  extends JFrame
 		fileMenu = new JMenu("File"); // Create File menu
 		game_menu = new JMenu("game"); // Create Elements menu
 		speed = new JMenu("Speed"); // Create File menu
-        csv=new JMenu("improt/export");
+		csv=new JMenu("improt/export");
 
 
 
@@ -96,7 +102,7 @@ public class Map  extends JFrame
 		slowdown.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		fast_forwards = new JMenuItem("fast forwards");
 		fast_forwards.setAccelerator(KeyStroke.getKeyStroke('U', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-//https://stackoverflow.com/questions/13366793/how-do-you-make-menu-item-jmenuitem-shortcut link for keyshorcut info
+		//https://stackoverflow.com/questions/13366793/how-do-you-make-menu-item-jmenuitem-shortcut link for keyshorcut info
 		exit = new JMenuItem("Exit");
 		exit.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		run = new JMenuItem("run");
@@ -110,7 +116,7 @@ public class Map  extends JFrame
 		new_file = new JMenuItem("new");
 		new_file.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		open = new JMenuItem("open");
-        open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		speed.add(slowdown);
 		speed.addSeparator();
 		speed.add(fast_forwards);
@@ -118,14 +124,14 @@ public class Map  extends JFrame
 		game_menu.add(fruit);
 		game_menu.addSeparator();
 		game_menu.add(packman);
-		
+
 		fileMenu.add(new_file);
-        fileMenu.addSeparator();
+		fileMenu.addSeparator();
 		fileMenu.add(run);
 		fileMenu.add(clean_map);
-        fileMenu.addSeparator();
+		fileMenu.addSeparator();
 		fileMenu.add(exit);
-		
+
 		csv.add(open);
 		csv.addSeparator();
 		csv.add(save);
@@ -147,6 +153,16 @@ public class Map  extends JFrame
 		new_file.addActionListener(handler);
 		open.addActionListener(handler);
 
+	}
+	public BufferedImage get_packman() throws IOException
+	{
+		packman_counter ++;
+		if (packman_counter>=packmans.length)
+		{
+			packman_counter =0;
+		}
+		packman_image_eating = ImageIO.read(new File(packmans[packman_counter]));		
+		return packman_image_eating;
 	}
 	public Color get_color()
 	{
@@ -183,12 +199,14 @@ public class Map  extends JFrame
 			}
 
 		}
+
 		for(Packman packman :my_game.getPackman_list())
 		{
 			g.drawImage(packman_image,(int) (algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
 		}
 		if (run_program)
 		{
+			color_counter =0;
 			for(Path path :paths)
 			{
 				g.setColor(get_color());
@@ -199,7 +217,20 @@ public class Map  extends JFrame
 					g.drawLine((int)start.x(), (int)start.y(), (int)end.x(),(int) end.y());
 				}
 			}
+			try {
+				packman_image_eating_temp = get_packman();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for(Path path :paths)
+			{
+
+				g.drawImage(packman_image_eating_temp,(int) (algo.convert_gps_to_pixel(path.get_location_by_time(global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(path.get_location_by_time(global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).y())-5,30, 30, null);
+
+			}
 		}
+
 
 	}
 
@@ -216,7 +247,7 @@ public class Map  extends JFrame
 				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
 				fruit_id++;
 				System.out.println("fruit ");
-				
+
 			}
 			else if (is_packman)
 			{
@@ -292,11 +323,12 @@ public class Map  extends JFrame
 			}
 			if(e.getSource()==slowdown) 
 			{
+				my_game.setSpeed_rate(my_game.getSpeed_rate()/2);
 
 			}
 			if(e.getSource()==fast_forwards) 
 			{
-
+				my_game.setSpeed_rate(my_game.getSpeed_rate()*2);
 			}
 			if(e.getSource()==exit) 
 			{
@@ -307,7 +339,18 @@ public class Map  extends JFrame
 				paths = algo.TSP(my_game);
 				repaint();
 				run_program =true;
-             System.out.println();
+				Thread thread = new Thread() {
+					@Override
+					public void run() {
+						try {
+							thread_repainter();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				};
+				thread.start();
 			}
 			if(e.getSource()==save) 
 			{
@@ -355,6 +398,14 @@ public class Map  extends JFrame
 
 			}
 
+		}
+	}
+	public void thread_repainter() throws InterruptedException
+	{
+		for (global_time=0;global_time*my_game.getSpeed_rate()<algo.get_max_path_time(paths);global_time++)
+		{
+			repaint();
+			Thread.sleep(1000);
 		}
 	}
 }

@@ -9,7 +9,7 @@ public class Game {
 
 	ArrayList<Fruit> fruit_list = new ArrayList<Fruit>();
 	ArrayList<Packman> packman_list = new ArrayList<Packman>();
-	double speed_rate;
+	double speed_rate = 10;
 	
 	public ArrayList<Fruit> getFruit_list() {
 		return fruit_list;

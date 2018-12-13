@@ -98,6 +98,19 @@ public class Algorithems {
 		fileWriter.close();
 	}
 
+	public double get_max_path_time(Path [] paths)
+	{
+		double max =0;
+		for(Path path : paths)
+		{
+			System.out.println(path.get_total_time());
+			if(max<path.get_total_time())
+			{
+				max = path.get_total_time();
+			}
+		}
+		return max;
+	}
 
 
 
