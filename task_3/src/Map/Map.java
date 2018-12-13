@@ -160,6 +160,7 @@ public class Map  extends JFrame
 		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
 		g.drawImage(scaledImage, 0, 0, null);
 		setJMenuBar(menuBarstatic);
+		fruit_counter =0;	
 		for (Fruit fruit : my_game.getFruit_list())
 		{
 			try {
@@ -197,7 +198,7 @@ public class Map  extends JFrame
 		@Override
 		public void mouseClicked(MouseEvent e) 
 		{
-			Point3D end = algo.convert_pixel_to_gps(new Point3D(e.getX(),e.getY(),0), getHeight(), getWidth());
+			Point3D end = algo.convert_pixel_to_gps(new Point3D(e.getX()-10,e.getY()+30,0), getHeight(), getWidth());
 			if (is_fruit)
 			{
 				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
