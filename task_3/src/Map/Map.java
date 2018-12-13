@@ -1,5 +1,4 @@
 package Map;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -28,15 +26,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-
-
 import Algorithems.Algorithems;
 import Algorithems.Path;
 import Fruit.Fruit;
 import Game.Game;
 import Geom.Point3D;
 import Packman.Packman;
-
 public class Map  extends JFrame 
 {
 
@@ -65,7 +60,7 @@ public class Map  extends JFrame
 
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
-	JMenu fileMenu , game_menu ,speed;
+	JMenu fileMenu , game_menu ,speed,csv;
 	JMenuItem refresh , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
 	public Map(String fileName) throws IOException 
 	{
@@ -82,13 +77,14 @@ public class Map  extends JFrame
 		fileMenu = new JMenu("File"); // Create File menu
 		game_menu = new JMenu("game"); // Create Elements menu
 		speed = new JMenu("Speed"); // Create File menu
-
+        csv=new JMenu("improt/export");
 
 
 
 		menuBarstatic.add(fileMenu); // Add the file menu
 		menuBarstatic.add(game_menu); // Add the element menu
 		menuBarstatic.add(speed); // Add the element menu
+		menuBarstatic.add(csv);
 
 
 		refresh = new JMenuItem("refresh");
@@ -104,17 +100,23 @@ public class Map  extends JFrame
 		open = new JMenuItem("open");
 
 		speed.add(slowdown);
+		speed.addSeparator();
 		speed.add(fast_forwards);
 
 		game_menu.add(fruit);
+		game_menu.addSeparator();
 		game_menu.add(packman);
-		game_menu.add(refresh);
-
+		
 		fileMenu.add(new_file);
-		fileMenu.add(open);
-		fileMenu.add(save);
+        fileMenu.addSeparator();
 		fileMenu.add(run);
+		fileMenu.add(refresh);
+        fileMenu.addSeparator();
 		fileMenu.add(exit);
+		
+		csv.add(open);
+		csv.addSeparator();
+		csv.add(save);
 		bar.add(menuBarstatic);
 
 
@@ -200,7 +202,8 @@ public class Map  extends JFrame
 			{
 				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
 				fruit_id++;
-				System.out.println("fruit ");		
+				System.out.println("fruit ");
+				
 			}
 			else if (is_packman)
 			{
