@@ -26,6 +26,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+
 import Algorithems.Algorithems;
 import Algorithems.Path;
 import Fruit.Fruit;
@@ -61,7 +63,8 @@ public class Map  extends JFrame
 	Algorithems algo = new Algorithems();
 	JMenuBar menuBarstatic;
 	JMenu fileMenu , game_menu ,speed,csv;
-	JMenuItem refresh , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
+	JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
+	@SuppressWarnings("deprecation")
 	public Map(String fileName) throws IOException 
 	{
 
@@ -87,18 +90,27 @@ public class Map  extends JFrame
 		menuBarstatic.add(csv);
 
 
-		refresh = new JMenuItem("refresh");
+		clean_map = new JMenuItem("clean map");
+		clean_map.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		slowdown = new JMenuItem("slow down");
+		slowdown.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		fast_forwards = new JMenuItem("fast forwards");
-
+		fast_forwards.setAccelerator(KeyStroke.getKeyStroke('U', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+//https://stackoverflow.com/questions/13366793/how-do-you-make-menu-item-jmenuitem-shortcut link for keyshorcut info
 		exit = new JMenuItem("Exit");
+		exit.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		run = new JMenuItem("run");
+		run.setAccelerator(KeyStroke.getKeyStroke('R', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		save = new JMenuItem("save");
+		save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		fruit = new JMenuItem("fruit");
+		fruit.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		packman = new JMenuItem("pacman");
+		packman.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		new_file = new JMenuItem("new");
+		new_file.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		open = new JMenuItem("open");
-
+        open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		speed.add(slowdown);
 		speed.addSeparator();
 		speed.add(fast_forwards);
@@ -110,7 +122,7 @@ public class Map  extends JFrame
 		fileMenu.add(new_file);
         fileMenu.addSeparator();
 		fileMenu.add(run);
-		fileMenu.add(refresh);
+		fileMenu.add(clean_map);
         fileMenu.addSeparator();
 		fileMenu.add(exit);
 		
@@ -126,7 +138,7 @@ public class Map  extends JFrame
 		menuBarstatic.addMouseListener(handler);
 		fruit.addActionListener(handler);
 		packman.addActionListener(handler);
-		refresh.addActionListener(handler);
+		clean_map.addActionListener(handler);
 		slowdown.addActionListener(handler);
 		fast_forwards.addActionListener(handler);
 		exit.addActionListener(handler);
@@ -273,7 +285,7 @@ public class Map  extends JFrame
 				is_fruit = false;
 				is_packman = true;			
 			}
-			if(e.getSource()==refresh) 
+			if(e.getSource()==clean_map) 
 			{
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
@@ -295,7 +307,7 @@ public class Map  extends JFrame
 				paths = algo.TSP(my_game);
 				repaint();
 				run_program =true;
-
+             System.out.println();
 			}
 			if(e.getSource()==save) 
 			{
