@@ -37,7 +37,7 @@ import Game.Game;
 import Geom.Point3D;
 import Packman.Packman;
 
-public class Map  extends JFrame
+public class Map  extends JFrame 
 {
 
 
@@ -45,8 +45,10 @@ public class Map  extends JFrame
 	//    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
 
 	JPanel fruits_panel = new JPanel(); 
-	private int color_counter =0;
+	private int color_counter = 0;
+	private int fruit_counter = 0;
 	Color[] colors = {Color.BLACK , Color.BLUE , Color.cyan , Color.GREEN , Color.GRAY , Color.MAGENTA ,Color.YELLOW ,Color.WHITE};
+	String[] fruits = {"src/fruit.png" , "src/fruit2.png" ,"src/fruit3.png" ,"src/fruit4.png" ,"src/fruit5.png"};
 	JPanel packmans_list = new JPanel();
 	JPanel fruits_list = new JPanel();
 	boolean is_packman = false;
@@ -70,7 +72,6 @@ public class Map  extends JFrame
 
 		super("Pack Man Map");
 		backgroundImage = ImageIO.read(new File(fileName));
-		fruit_image = ImageIO.read(new File("src/fruit.png"));		
 		packman_image = ImageIO.read(new File("src/packman.png"));		
 
 
@@ -142,14 +143,29 @@ public class Map  extends JFrame
 		}
 		return colors[color_counter];
 	}
-	public void paint(Graphics g)
+	public BufferedImage get_fruit() throws IOException
+	{
+		fruit_counter ++;
+		if (fruit_counter>=fruits.length)
+		{
+			fruit_counter =0;
+		}
+		fruit_image = ImageIO.read(new File(fruits[fruit_counter]));		
+		return fruit_image;
+	}
+	public void paint(Graphics g) 
 	{
 		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
 		g.drawImage(scaledImage, 0, 0, null);
 		setJMenuBar(menuBarstatic);
 		for (Fruit fruit : my_game.getFruit_list())
 		{
-			g.drawImage(fruit_image,(int) (algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
+			try {
+				g.drawImage(get_fruit(),(int) (algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 		for(Packman packman :my_game.getPackman_list())
@@ -173,28 +189,6 @@ public class Map  extends JFrame
 	}
 
 
-	//	public void paintComponent(Graphics g)
-	//	{
-	//		 Image image = Toolkit.getDefaultToolkit().getImage("src/fruit.png");
-	//		 g.drawImage(backgroundImage, 0, 0, getWidth(),getHeight(), this);
-
-	//    paintComponent(g);
-	//      g.drawImage(image, 0, 0, null);
-	//			g.drawImage(backgroundImage, 0, 0, this);
-	//			int w = this.getWidth();
-	//			int h = this.getHeight();	
-	//			add(menuBarstatic , BorderLayout.NORTH);
-
-	//		g.setClip(loc_x, loc_y, w, h);
-
-	//		 g.setColor(Color.red);
-	//		 g.fillOval(loc_x, loc_y, w/3, h/3);
-	//			g.setColor(Color.blue);
-	//			String s = " ["+w+","+h+"]";
-	//	    g.drawImage(image, loc_x, loc_y, null);
-
-
-	//	}
 	public class Handler implements MouseListener , ActionListener , KeyListener{
 
 
@@ -206,17 +200,7 @@ public class Map  extends JFrame
 			{
 				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
 				fruit_id++;
-				System.out.println("fruit ");
-				/*				JLabel thumb = new JLabel();
-				thumb.setIcon(icon);
-				thumb.setBounds(e.getX() - getWidth()/10 ,e.getY() - getWidth()/10 ,(int) getWidth()/5, (int) getHeight()/5);
-				label.add(thumb);
-				fruits_panel.add(thumb);
-				add(thumb);
-				add(fruits_panel);
-				thumb.setVisible(true);
-				repaint();
-				 */				
+				System.out.println("fruit ");		
 			}
 			else if (is_packman)
 			{
@@ -228,7 +212,7 @@ public class Map  extends JFrame
 			System.out.println(end);
 
 
-
+			repaint();
 		}
 
 		@Override
