@@ -11,7 +11,7 @@ public class main
 		Map map = new Map("src/Ariel1.png");	
 	//	MyFrame map = new MyFrame();
 		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		map.setSize(1433,642);
+		map.setSize(1233,642);
 		map.setVisible(true);
 		map.setLocationRelativeTo(null);
 	//	map.setJMenuBar(menuBarstatic); // Add the menu bar to the window
