@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Random;
 
 import Coords.MyCoords;
@@ -24,6 +25,7 @@ public class Algorithems {
 	final double TOTAL_DISTANCE_Y = cord.distance3d(ORIGIN, new Point3D(CORNER_LAT , ORIGIN_LON , 0));
 	final double TOTAL_DISTANCE_ANGEL_LON = CORNER_LON - ORIGIN_LON;
 	final double TOTAL_DISTANCE_ANGEL_LAT = CORNER_LAT - ORIGIN_LAT;
+	Random randomNum = new Random();
 
 	public Point3D convert_pixel_to_gps(Point3D pixel , int height, int  width)
 	{
@@ -218,10 +220,9 @@ public class Algorithems {
 		}
 		return matrixmin;
 	}
-	
+
 	public Path[] adjustments(Path[] paths)
 	{
-		Path path1 , path2;
 
 		if (paths.length>1)
 		{
@@ -235,26 +236,13 @@ public class Algorithems {
 					max_value = paths[k].get_total_time();
 				}
 			}
-			for (int i =0 ; i<50 ; i++)
-			{
-				Random randomNum = new Random();
-				int firstpackman = max_path;
-				int secondpackman = randomNum.nextInt(paths.length-1);
-				path1 = paths[firstpackman].copy();
-				path2 = paths[secondpackman].copy();
-				double first_path_time = path1.get_total_time();	
-				double second_path_time = path2.get_total_time();
-				if (first_path_time>second_path_time)
-				{
-					int firstfruit = 1 + randomNum.nextInt(path1.getLocations().size()-1);
-					path2.locations.add(path1.locations.remove(firstfruit));
-					if (path2.get_total_time()<path1.get_total_time() && paths[firstpackman].get_total_time()>path1.get_total_time())
-					{
-						paths[firstpackman] = path1.copy();
-						paths[secondpackman] = path2.copy();
-					}
-				}
-			}
+			paths[max_path] = adjustments_swap(paths[max_path]);
+			paths = adjusments_move_fruits(paths , max_path);
+
+		}
+		else
+		{
+			paths[0] = adjustments_swap(paths[0]);
 		}
 		return paths;
 	}
@@ -284,4 +272,54 @@ public class Algorithems {
 		return matrixmin;
 	}
 
+	public Path swap(Path path ,int first_location , int second_location)
+	{
+		Collections.swap(path.getLocations(), first_location, second_location);
+		return path;
+
+	}
+	public Path adjustments_swap(Path path)
+	{
+		Path path1;
+		for (int i =0 ; i<20 ; i++)
+		{
+			path1 = path.copy();
+			for(int j=0;j<10;j++)
+			{
+				swap(path1 , 1 + randomNum.nextInt(path1.getLocations().size()-1) , 1 + randomNum.nextInt(path1.getLocations().size()-1));
+				if (path1.get_total_time()<path.get_total_time())
+				{
+					path = path1.copy();
+					break;
+				}
+			}
+
+		}
+		return path;
+	}
+	public Path[] adjusments_move_fruits(Path [] paths , int max_path)
+	{
+		Path path1 , path2;
+
+		for (int i =0 ; i<50 ; i++)
+		{
+			int firstpackman = max_path;
+			int secondpackman = randomNum.nextInt(paths.length-1);
+			path1 = paths[firstpackman].copy();
+			path2 = paths[secondpackman].copy();
+			path2.locations.add(path1.locations.remove(1 + randomNum.nextInt(path1.getLocations().size()-1)));
+			if (path2.get_total_time()<path1.get_total_time() && paths[firstpackman].get_total_time()>path1.get_total_time())
+			{
+				paths[firstpackman] = path1.copy();
+				paths[secondpackman] = path2.copy();
+			}
+
+		}
+
+		return paths;
+	}
 }
+
+
+
+

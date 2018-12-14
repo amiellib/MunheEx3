@@ -1,24 +1,19 @@
 package Map;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,7 +34,6 @@ public class Map  extends JFrame
 
 
 	ArrayList<JLabel> label = new ArrayList<JLabel>(); 
-	//    ImageIcon icon = new ImageIcon( new ImageIcon("src/fruit.png").getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
 
 	JPanel fruits_panel = new JPanel(); 
 	private int color_counter = 0;
@@ -70,7 +64,6 @@ public class Map  extends JFrame
 	JMenuBar menuBarstatic;
 	JMenu fileMenu , game_menu ,speed,csv;
 	JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
-	@SuppressWarnings("deprecation")
 	public Map(String fileName) throws IOException 
 	{
 
@@ -79,7 +72,6 @@ public class Map  extends JFrame
 		packman_image = ImageIO.read(new File("src/packman.png"));		
 
 
-		JPanel bar = new JPanel();
 		menuBarstatic = new JMenuBar(); // Window menu bar
 
 
@@ -135,7 +127,7 @@ public class Map  extends JFrame
 		csv.add(open);
 		csv.addSeparator();
 		csv.add(save);
-		bar.add(menuBarstatic);
+		setJMenuBar(menuBarstatic);
 
 
 
@@ -187,7 +179,6 @@ public class Map  extends JFrame
 	{
 		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
 		g.drawImage(scaledImage, 0, 0, null);
-		setJMenuBar(menuBarstatic);
 		fruit_counter =0;	
 		for (Fruit fruit : my_game.getFruit_list())
 		{
@@ -230,7 +221,7 @@ public class Map  extends JFrame
 
 			}
 		}
-
+		menuBarstatic.repaint();
 
 	}
 
@@ -320,6 +311,7 @@ public class Map  extends JFrame
 			{
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
+				repaint();
 			}
 			if(e.getSource()==slowdown) 
 			{
@@ -377,6 +369,7 @@ public class Map  extends JFrame
 			{
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
+				repaint();
 			}
 			if(e.getSource()==open) {
 				try {
@@ -407,6 +400,8 @@ public class Map  extends JFrame
 			repaint();
 			Thread.sleep(1000);
 		}
+		repaint();
+
 	}
 }
 
