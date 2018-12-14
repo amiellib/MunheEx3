@@ -12,11 +12,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,23 +22,19 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import Algorithems.Algorithems;
-import Algorithems.Path;
-import Fruit.Fruit;
-import Game.Game;
 import Geom.Point3D;
-import Packman.Packman;
+import entities.Fruit;
+import entities.Game;
+import entities.Packman;
+import entities.Path;
 public class Map  extends JFrame 
 {
 
 
-	ArrayList<JLabel> label = new ArrayList<JLabel>(); 
 
-	JPanel fruits_panel = new JPanel(); 
-	private int color_counter = 0;
-	private int fruit_counter = 0;
-	Color[] colors = {Color.BLACK , Color.BLUE , Color.cyan , Color.GREEN , Color.GRAY , Color.MAGENTA ,Color.YELLOW ,Color.WHITE};
-	String[] fruits = {"src/fruit.png" , "src/fruit2.png" ,"src/fruit3.png" ,"src/fruit4.png" ,"src/fruit5.png"};
-	String[] packmans = {"src/packman_eating_3.jpeg" , "src/packman_eating2.png" ,"src/packman_eating1.png" , "src/packman_eating2.png" };
+//	private int color_counter = 0;
+//	Color[] colors = {Color.BLACK , Color.BLUE , Color.cyan , Color.GREEN , Color.GRAY , Color.MAGENTA ,Color.YELLOW ,Color.WHITE};
+	String[] packmans = {"src/resources/packman_eating_3.jpeg" , "src/resources/packman_eating2.png" ,"src/resources/packman_eating1.png" , "src/resources/packman_eating2.png" };
 	JPanel packmans_list = new JPanel();
 	JPanel fruits_list = new JPanel();
 	boolean is_packman = false;
@@ -51,8 +45,6 @@ public class Map  extends JFrame
 	int packman_counter =0;
 	Game my_game = new Game();
 	private BufferedImage backgroundImage;
-	private BufferedImage fruit_image;
-	private BufferedImage packman_image;
 	private BufferedImage packman_image_eating;
 	private BufferedImage packman_image_eating_temp;
 
@@ -69,7 +61,6 @@ public class Map  extends JFrame
 
 		super("Pack Man Map");
 		backgroundImage = ImageIO.read(new File(fileName));
-		packman_image = ImageIO.read(new File("src/packman.png"));		
 
 
 		menuBarstatic = new JMenuBar(); // Window menu bar
@@ -156,7 +147,7 @@ public class Map  extends JFrame
 		packman_image_eating = ImageIO.read(new File(packmans[packman_counter]));		
 		return packman_image_eating;
 	}
-	public Color get_color()
+/*	public Color get_color()
 	{
 		color_counter ++;
 		if (color_counter>=colors.length)
@@ -165,42 +156,26 @@ public class Map  extends JFrame
 		}
 		return colors[color_counter];
 	}
-	public BufferedImage get_fruit() throws IOException
-	{
-		fruit_counter ++;
-		if (fruit_counter>=fruits.length)
-		{
-			fruit_counter =0;
-		}
-		fruit_image = ImageIO.read(new File(fruits[fruit_counter]));		
-		return fruit_image;
-	}
-	public void paint(Graphics g) 
+*/	public void paint(Graphics g) 
 	{
 		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
 		g.drawImage(scaledImage, 0, 0, null);
-		fruit_counter =0;	
 		for (Fruit fruit : my_game.getFruit_list())
 		{
-			try {
-				g.drawImage(get_fruit(),(int) (algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			g.drawImage(fruit.getFruit_image(),(int) (algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
 
 		}
 
 		for(Packman packman :my_game.getPackman_list())
 		{
-			g.drawImage(packman_image,(int) (algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
+			g.drawImage(packman.getPackman_image(),(int) (algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
 		}
 		if (run_program)
 		{
-			color_counter =0;
+	//		color_counter =0;
 			for(Path path :paths)
 			{
-				g.setColor(get_color());
+				g.setColor(path.getColor());
 				for(int i=0;i<path.getLocations().size()-1;i++)
 				{
 					Point3D start = algo.convert_gps_to_pixel(path.getLocations().get(i), getHeight(), getWidth());
@@ -211,7 +186,6 @@ public class Map  extends JFrame
 			try {
 				packman_image_eating_temp = get_packman();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			for(Path path :paths)
@@ -222,7 +196,6 @@ public class Map  extends JFrame
 			}
 		}
 		menuBarstatic.repaint();
-
 	}
 
 
@@ -237,19 +210,12 @@ public class Map  extends JFrame
 			{
 				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
 				fruit_id++;
-				System.out.println("fruit ");
-
 			}
 			else if (is_packman)
 			{
 				my_game.getPackman_list().add(new Packman(packman_id, end , 1 ,1 ));
 				packman_id++;
-				System.out.println("packman ");
-
 			}
-			System.out.println(end);
-
-
 			repaint();
 		}
 
@@ -309,6 +275,7 @@ public class Map  extends JFrame
 			}
 			if(e.getSource()==clean_map) 
 			{
+				run_program = false;
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
 				repaint();
@@ -328,8 +295,8 @@ public class Map  extends JFrame
 			}
 			if(e.getSource()==run) 
 			{
-				paths = algo.TSP(my_game);
 				repaint();
+				paths = algo.TSP(my_game);
 				run_program =true;
 				Thread thread = new Thread() {
 					@Override
@@ -367,11 +334,14 @@ public class Map  extends JFrame
 			}
 			if(e.getSource()==new_file) 
 			{
+				run_program = false;
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
 				repaint();
 			}
-			if(e.getSource()==open) {
+			if(e.getSource()==open) 
+			{
+				run_program = false;
 				try {
 					JFrame parentFrame = new JFrame();
 					JFileChooser fileChooser = new JFileChooser();

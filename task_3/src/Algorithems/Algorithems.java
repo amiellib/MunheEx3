@@ -8,10 +8,11 @@ import java.util.Collections;
 import java.util.Random;
 
 import Coords.MyCoords;
-import Game.Game;
 import Geom.Point3D;
-import Packman.Packman;
-import Fruit.Fruit;
+import entities.Fruit;
+import entities.Game;
+import entities.Packman;
+import entities.Path;
 
 public class Algorithems {
 	MyCoords cord=new MyCoords();
@@ -105,7 +106,6 @@ public class Algorithems {
 		double max =0;
 		for(Path path : paths)
 		{
-			System.out.println(path.get_total_time());
 			if(max<path.get_total_time())
 			{
 				max = path.get_total_time();
@@ -118,7 +118,6 @@ public class Algorithems {
 
 	public Path[] TSP(Game game)
 	{
-
 		Path[] paths_greedy_free = new Path [game.getPackman_list().size()];
 		int counter =0;
 		for (Packman this_packman : game.getPackman_list())
@@ -307,7 +306,8 @@ public class Algorithems {
 			int secondpackman = randomNum.nextInt(paths.length-1);
 			path1 = paths[firstpackman].copy();
 			path2 = paths[secondpackman].copy();
-			path2.locations.add(path1.locations.remove(1 + randomNum.nextInt(path1.getLocations().size()-1)));
+			path2.getLocations().add(path1.getLocations().remove(1 + randomNum.nextInt(path1.getLocations().size()-1)));
+			path2 = adjustments_swap(path2);
 			if (path2.get_total_time()<path1.get_total_time() && paths[firstpackman].get_total_time()>path1.get_total_time())
 			{
 				paths[firstpackman] = path1.copy();

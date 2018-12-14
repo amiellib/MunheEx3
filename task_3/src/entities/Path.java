@@ -1,25 +1,30 @@
-package Algorithems;
+package entities;
 
+import java.awt.Color;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
+import Algorithems.Algorithems;
 import Coords.MyCoords;
 import Geom.Point3D;
-import Packman.Packman;
 
 public class Path {
 
+	Random randomNum = new Random();
 	Algorithems algorithems = new Algorithems();
-	Packman my_packman;
-	double time = 0.0;
-	ArrayList<Point3D> locations = new ArrayList<Point3D>();
+	private Packman my_packman;
+	private double time = 0.0;
+	private Color color;
+	private ArrayList<Point3D> locations = new ArrayList<Point3D>();
 	MyCoords cord = new MyCoords();
 	Algorithems algo = new Algorithems();
 
 	public Path(Packman my_packman) {
 		super();
 		this.my_packman = my_packman;
+		color =  new Color(randomNum.nextFloat(), randomNum.nextFloat(), randomNum.nextFloat());
 		locations.add(my_packman.getGps());		
 	}
 	public ArrayList<Point3D> getLocations() {
@@ -29,6 +34,13 @@ public class Path {
 		this.locations = locations;
 	}
 	
+	
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
+	}
 	public double get_total_time()
 	{
 		return get_total_distance()/my_packman.getSpeed();

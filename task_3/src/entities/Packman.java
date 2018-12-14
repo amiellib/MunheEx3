@@ -1,4 +1,4 @@
-package Packman;
+package entities;
 
 import java.awt.Image;
 import java.io.File;
@@ -23,13 +23,12 @@ public class Packman
 		this.gps = gps;
 		this.range = range;
 		this.speed = speed;
-		File pathToFile = new File("packman.png");
-/*		try {
-			Image packman_image = ImageIO.read(pathToFile);
+		try {
+			packman_image = ImageIO.read(new File("src/resources/packman.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 	}
 	public Packman(int packman_id , Point3D gps, double speed) {
 		this(packman_id , gps,speed,1);

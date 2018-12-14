@@ -1,8 +1,9 @@
-package Fruit;
+package entities;
 
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -13,6 +14,9 @@ public class Fruit
 	private int fruit_id;
 	private Point3D Gps;
 	private double weight;
+	private Image fruit_image;
+	String[] fruits = {"src/resources/fruit.png" , "src/resources/fruit2.png" ,"src/resources/fruit3.png" ,"src/resources/fruit4.png" ,"src/resources/fruit5.png"};
+	Random randomNum = new Random();
 	public int getFruit_id() {
 		return fruit_id;
 	}
@@ -25,7 +29,6 @@ public class Fruit
 		Gps = gps;
 	}
 
-	private Image fruit_image;
 
 	//	private boolean Eaten;
 	/**
@@ -37,13 +40,12 @@ public class Fruit
 		this.fruit_id =fruit_id;
 		this.Gps=new Point3D(gps);
 		this.weight = weight;
-		File pathToFile = new File("resources/fruit.png");
-/*		try {
-			Image fruit_image = ImageIO.read(pathToFile);
+		try {
+			fruit_image = ImageIO.read(new File(fruits[randomNum.nextInt(fruits.length-1)]));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 	public Point3D getGps() {

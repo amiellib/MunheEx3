@@ -1,9 +1,6 @@
-package Game;
+package entities;
 
 import java.util.ArrayList;
-
-import Fruit.Fruit;
-import Packman.Packman;
 
 public class Game {
 
