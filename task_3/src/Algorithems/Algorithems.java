@@ -36,7 +36,6 @@ public class Algorithems {
 	{
 		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
-
 	public Point3D convert_meters_to_gps(Point3D meters)
 	{
 		return new Point3D(ORIGIN_LAT + meters.y()/TOTAL_DISTANCE_Y*(TOTAL_DISTANCE_ANGEL_LAT) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(TOTAL_DISTANCE_ANGEL_LON) , meters.z());
@@ -52,15 +51,8 @@ public class Algorithems {
 		Point3D meters_start = convert_gps_to_meters(start);
 		Point3D meters_end = convert_gps_to_meters(end);
 		Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
-		double totalD =  Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.z());
-
-
-
-		double t = (totalD - range)/totalD;
-		Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
-		Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
-		return convert_meters_to_gps(final_point_meters);
-
+		double t = (Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.z()) - range)/Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.z());
+		return convert_meters_to_gps(new Point3D(meters_start.x()+vect.x()*t ,meters_start.y()+vect.y()*t , meters_start.z()+vect.z()*t));
 	}
 
 	public Game get_data_from_csv(String path_of_csv) throws IOException
@@ -105,17 +97,25 @@ public class Algorithems {
 	{
 		double max =0;
 		for(Path path : paths)
-		{
-			if(max<path.get_total_time())
-			{
-				max = path.get_total_time();
-			}
-		}
+			max = (max<path.get_total_time()) ? path.get_total_time() : max;
 		return max;
+
 	}
 
-
-
+	public int get_max_path(Path [] paths)
+	{
+		int max_path =0;
+		double max_value=paths[0].get_total_time();
+		for (int k=1;k<paths.length;k++)
+		{
+			if(paths[k].get_total_time()>max_value)
+			{
+				max_path = k;
+				max_value = paths[k].get_total_time();
+			}
+		}
+		return max_path;
+	}
 	public Path[] TSP(Game game)
 	{
 		Path[] paths_greedy_free = new Path [game.getPackman_list().size()];
@@ -151,7 +151,7 @@ public class Algorithems {
 		}
 
 
-		for (int i=0;i<50;i++)
+		for (int i=0;i<game.getFruit_list().size();i++)
 			paths_greedy_free = adjustments(paths_greedy_free);
 
 		double max_greedy_free=0;
@@ -163,7 +163,7 @@ public class Algorithems {
 				max_greedy_free = path.get_total_time();
 			}
 		}
-		//greedy
+/*		//greedy
 		System.out.println("greedy");
 		Path[] paths_greedy = new Path [game.getPackman_list().size()];
 		counter =0;
@@ -194,8 +194,15 @@ public class Algorithems {
 			System.out.println(path.get_total_time());
 		}			
 		return (max_greedy>max_greedy_free) ?   paths_greedy_free : paths_greedy;
+/*/
+return paths_greedy_free;
 	}
 
+	
+	
+	
+	
+	
 	public MatrixMin get_matrix_min(Game game )
 	{
 
@@ -214,38 +221,10 @@ public class Algorithems {
 					matrixmin.array_min[i] = j;
 					min_value = matrixmin.matrix[i][j];
 				}
-
 			}
 		}
 		return matrixmin;
 	}
-
-	public Path[] adjustments(Path[] paths)
-	{
-
-		if (paths.length>1)
-		{
-			int max_path =0;
-			double max_value=paths[0].get_total_time();
-			for (int k=1;k<paths.length;k++)
-			{
-				if(paths[k].get_total_time()>max_value)
-				{
-					max_path = k;
-					max_value = paths[k].get_total_time();
-				}
-			}
-			paths[max_path] = adjustments_swap(paths[max_path]);
-			paths = adjusments_move_fruits(paths , max_path);
-
-		}
-		else
-		{
-			paths[0] = adjustments_swap(paths[0]);
-		}
-		return paths;
-	}
-
 	public Matrix_single_min get_matrix_min_single(Game game)
 	{
 		double value;
@@ -270,20 +249,28 @@ public class Algorithems {
 		}
 		return matrixmin;
 	}
-
+	
+	public Path[] adjustments(Path[] paths)
+	{
+		if (paths.length>1)
+			paths = adjusments_move_fruits(paths , get_max_path(paths));
+		else
+			paths[0] = adjustments_swap(paths[0]);
+		return paths;
+	}
+	
 	public Path swap(Path path ,int first_location , int second_location)
 	{
 		Collections.swap(path.getLocations(), first_location, second_location);
 		return path;
-
 	}
 	public Path adjustments_swap(Path path)
 	{
 		Path path1;
-		for (int i =0 ; i<20 ; i++)
+		for (int i =0 ; i<path.getLocations().size()*path.getLocations().size() ; i++)
 		{
 			path1 = path.copy();
-			for(int j=0;j<10;j++)
+			for(int j=0;j<(int) path.getLocations().size()/2;j++)
 			{
 				swap(path1 , 1 + randomNum.nextInt(path1.getLocations().size()-1) , 1 + randomNum.nextInt(path1.getLocations().size()-1));
 				if (path1.get_total_time()<path.get_total_time())
@@ -292,7 +279,6 @@ public class Algorithems {
 					break;
 				}
 			}
-
 		}
 		return path;
 	}
@@ -300,22 +286,19 @@ public class Algorithems {
 	{
 		Path path1 , path2;
 
-		for (int i =0 ; i<50 ; i++)
+		for (int i =0 ; i<paths.length*30 ; i++)
 		{
-			int firstpackman = max_path;
 			int secondpackman = randomNum.nextInt(paths.length-1);
-			path1 = paths[firstpackman].copy();
+			path1 = paths[max_path].copy();
 			path2 = paths[secondpackman].copy();
 			path2.getLocations().add(path1.getLocations().remove(1 + randomNum.nextInt(path1.getLocations().size()-1)));
 			path2 = adjustments_swap(path2);
-			if (path2.get_total_time()<path1.get_total_time() && paths[firstpackman].get_total_time()>path1.get_total_time())
+			if (path2.get_total_time()<path1.get_total_time() && paths[max_path].get_total_time()>path1.get_total_time())
 			{
-				paths[firstpackman] = path1.copy();
+				paths[max_path] = path1.copy();
 				paths[secondpackman] = path2.copy();
 			}
-
 		}
-
 		return paths;
 	}
 }
