@@ -1,91 +1,53 @@
 package Map;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
+import javax.swing.*;
 import Algorithems.Algorithems;
 import Geom.Point3D;
-import entities.Fruit;
-import entities.Game;
-import entities.Packman;
-import entities.Path;
+import entities.*;
+
 public class Map  extends JFrame 
 {
 
-
-
-//	private int color_counter = 0;
-//	Color[] colors = {Color.BLACK , Color.BLUE , Color.cyan , Color.GREEN , Color.GRAY , Color.MAGENTA ,Color.YELLOW ,Color.WHITE};
-	String[] packmans = {"src/resources/packman_eating_3.jpeg" , "src/resources/packman_eating2.png" ,"src/resources/packman_eating1.png" , "src/resources/packman_eating2.png" };
-	JPanel packmans_list = new JPanel();
-	JPanel fruits_list = new JPanel();
-	boolean is_packman = false;
-	boolean is_fruit = false;
-	boolean[] packman_fruit_null = {false,false,true};
-	int fruit_id = 0;
-	int packman_id =0;
-	int packman_counter =0;
-	Game my_game = new Game();
-	private BufferedImage backgroundImage;
-	private BufferedImage packman_image_eating;
-	private BufferedImage packman_image_eating_temp;
-
-	private boolean run_program = false;
+	private String[] packmans = {"src/resources/packman_eating_3.jpeg" , "src/resources/packman_eating2.png" ,"src/resources/packman_eating1.png" , "src/resources/packman_eating2.png" };
+	private boolean is_packman = false , is_fruit = false , run_program = false;
+	private int fruit_id = 0 , packman_id =0 , packman_counter =0 , global_time;
+	private Game my_game = new Game();
+	private BufferedImage backgroundImage , packman_image_eating_temp;
 	private Path [] paths;
-	private int global_time;
-
-	Algorithems algo = new Algorithems();
-	JMenuBar menuBarstatic;
-	JMenu fileMenu , game_menu ,speed,csv;
-	JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
+	private Algorithems algo = new Algorithems();
+	private JMenuBar menuBarstatic;
+	private JMenu fileMenu , game_menu ,speed,csv;
+	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
 	public Map(String fileName) throws IOException 
 	{
-
 		super("Pack Man Map");
 		backgroundImage = ImageIO.read(new File(fileName));
 
-
 		menuBarstatic = new JMenuBar(); // Window menu bar
-
 
 		fileMenu = new JMenu("File"); // Create File menu
 		game_menu = new JMenu("game"); // Create Elements menu
 		speed = new JMenu("Speed"); // Create File menu
 		csv=new JMenu("improt/export");
 
-
-
 		menuBarstatic.add(fileMenu); // Add the file menu
 		menuBarstatic.add(game_menu); // Add the element menu
 		menuBarstatic.add(speed); // Add the element menu
 		menuBarstatic.add(csv);
 
-
+		//https://stackoverflow.com/questions/13366793/how-do-you-make-menu-item-jmenuitem-shortcut link for keyshorcut info
 		clean_map = new JMenuItem("clean map");
 		clean_map.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		slowdown = new JMenuItem("slow down");
 		slowdown.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		fast_forwards = new JMenuItem("fast forwards");
 		fast_forwards.setAccelerator(KeyStroke.getKeyStroke('U', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		//https://stackoverflow.com/questions/13366793/how-do-you-make-menu-item-jmenuitem-shortcut link for keyshorcut info
 		exit = new JMenuItem("Exit");
 		exit.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		run = new JMenuItem("run");
@@ -100,6 +62,7 @@ public class Map  extends JFrame
 		new_file.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		open = new JMenuItem("open");
 		open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+
 		speed.add(slowdown);
 		speed.addSeparator();
 		speed.add(fast_forwards);
@@ -118,9 +81,8 @@ public class Map  extends JFrame
 		csv.add(open);
 		csv.addSeparator();
 		csv.add(save);
+
 		setJMenuBar(menuBarstatic);
-
-
 
 		Handler handler = new Handler();
 		getContentPane().addMouseListener(handler);
@@ -139,40 +101,22 @@ public class Map  extends JFrame
 	}
 	public BufferedImage get_packman() throws IOException
 	{
-		packman_counter ++;
-		if (packman_counter>=packmans.length)
-		{
-			packman_counter =0;
-		}
-		packman_image_eating = ImageIO.read(new File(packmans[packman_counter]));		
-		return packman_image_eating;
+		packman_counter = (++packman_counter>=packmans.length) ? 0 : packman_counter;
+		return  ImageIO.read(new File(packmans[packman_counter]));
 	}
-/*	public Color get_color()
+	public void paint(Graphics g) 
 	{
-		color_counter ++;
-		if (color_counter>=colors.length)
-		{
-			color_counter =0;
-		}
-		return colors[color_counter];
-	}
-*/	public void paint(Graphics g) 
-	{
-		Image scaledImage = backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH);
-		g.drawImage(scaledImage, 0, 0, null);
+		g.drawImage(backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH), 0, 0, null);
 		for (Fruit fruit : my_game.getFruit_list())
 		{
 			g.drawImage(fruit.getFruit_image(),(int) (algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(fruit.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
-
 		}
-
 		for(Packman packman :my_game.getPackman_list())
 		{
 			g.drawImage(packman.getPackman_image(),(int) (algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(packman.getGps(), getHeight(), getWidth()).y())-5,30, 30, null);
 		}
 		if (run_program)
 		{
-	//		color_counter =0;
 			for(Path path :paths)
 			{
 				g.setColor(path.getColor());
@@ -190,17 +134,13 @@ public class Map  extends JFrame
 			}
 			for(Path path :paths)
 			{
-
 				g.drawImage(packman_image_eating_temp,(int) (algo.convert_gps_to_pixel(path.get_location_by_time(global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(path.get_location_by_time(global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).y())-5,30, 30, null);
-
 			}
 		}
 		menuBarstatic.repaint();
 	}
 
-
-	public class Handler implements MouseListener , ActionListener , KeyListener{
-
+	public class Handler implements MouseListener , ActionListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) 
@@ -220,46 +160,13 @@ public class Map  extends JFrame
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {
-
-
-		}
-
+		public void mousePressed(MouseEvent e) {}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			//        System.out.println(e.getX() + "," + e.getY());
-
-		}
-
+		public void mouseReleased(MouseEvent e) {}
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			//	        System.out.println(e.getX() + "," + e.getY());
-
-		}
-
+		public void mouseEntered(MouseEvent e) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-
-		}
+		public void mouseExited(MouseEvent e) {}
 
 		@Override
 		public void actionPerformed(ActionEvent e) 
@@ -267,7 +174,6 @@ public class Map  extends JFrame
 			if(e.getSource().equals(fruit)) {
 				is_fruit = true;
 				is_packman = false;
-
 			}
 			if(e.getSource()==packman) {
 				is_fruit = false;
@@ -283,7 +189,6 @@ public class Map  extends JFrame
 			if(e.getSource()==slowdown) 
 			{
 				my_game.setSpeed_rate(my_game.getSpeed_rate()/2);
-
 			}
 			if(e.getSource()==fast_forwards) 
 			{
@@ -298,16 +203,10 @@ public class Map  extends JFrame
 				repaint();
 				paths = algo.TSP(my_game);
 				run_program =true;
-				Thread thread = new Thread() {
+				Thread thread = new Thread() 
+				{
 					@Override
-					public void run() {
-						try {
-							thread_repainter();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
+					public void run() {thread_repainter();}
 				};
 				thread.start();
 			}
@@ -317,20 +216,12 @@ public class Map  extends JFrame
 					JFrame parentFrame = new JFrame();
 					JFileChooser fileChooser = new JFileChooser();
 					fileChooser.setDialogTitle("Specify a file to save");
-					int userSelection = fileChooser.showSaveDialog(parentFrame);
-					if (userSelection == JFileChooser.APPROVE_OPTION) {
-						File fileToSave = fileChooser.getSelectedFile();
-						algo.create_csv_from_game(my_game, fileToSave.toString());
-						System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-
+					if (fileChooser.showSaveDialog(parentFrame) == JFileChooser.APPROVE_OPTION) {
+						algo.create_csv_from_game(my_game, fileChooser.getSelectedFile().toString());
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
-
-
 			}
 			if(e.getSource()==new_file) 
 			{
@@ -346,32 +237,32 @@ public class Map  extends JFrame
 					JFrame parentFrame = new JFrame();
 					JFileChooser fileChooser = new JFileChooser();
 					fileChooser.setDialogTitle("Specify a file to open");
-					int userSelection = fileChooser.showOpenDialog(parentFrame);
-					if (userSelection == JFileChooser.APPROVE_OPTION) {
-						File fileToLoad = fileChooser.getSelectedFile();
-						my_game = algo.get_data_from_csv(fileToLoad.toString());
-						System.out.println("opened file: " + fileToLoad.getAbsolutePath());
+					if (fileChooser.showOpenDialog(parentFrame) == JFileChooser.APPROVE_OPTION) {
+						my_game = algo.get_data_from_csv(fileChooser.getSelectedFile().toString());
 						repaint();
-
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
 			}
-
 		}
 	}
-	public void thread_repainter() throws InterruptedException
+	public void thread_repainter()  
 	{
-		for (global_time=0;global_time*my_game.getSpeed_rate()<algo.get_max_path_time(paths);global_time++)
+		try
 		{
+			for (global_time=0;global_time*my_game.getSpeed_rate()<algo.get_max_path_time(paths);global_time++)
+			{
+				repaint();
+				Thread.sleep(1000);
+			}
 			repaint();
-			Thread.sleep(1000);
+		}catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		repaint();
-
 	}
+
+
+	
 }
 

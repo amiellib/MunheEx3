@@ -17,6 +17,7 @@ public class Fruit
 	private Image fruit_image;
 	String[] fruits = {"src/resources/fruit.png" , "src/resources/fruit2.png" ,"src/resources/fruit3.png" ,"src/resources/fruit4.png" ,"src/resources/fruit5.png"};
 	Random randomNum = new Random();
+	private boolean is_eaten = false;
 	public int getFruit_id() {
 		return fruit_id;
 	}
@@ -30,7 +31,6 @@ public class Fruit
 	}
 
 
-	//	private boolean Eaten;
 	/**
 	 * build a Fruit 
 	 * @param gps where is the Fruit placed
@@ -43,7 +43,6 @@ public class Fruit
 		try {
 			fruit_image = ImageIO.read(new File(fruits[randomNum.nextInt(fruits.length-1)]));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -61,6 +60,14 @@ public class Fruit
 
 	public void setWeight(double weight) {
 		this.weight = weight;
+	}
+
+	public boolean isIs_eaten() {
+		return is_eaten;
+	}
+
+	public void setIs_eaten(boolean is_eaten) {
+		this.is_eaten = is_eaten;
 	}
 
 	@Override
