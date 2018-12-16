@@ -23,7 +23,10 @@ public class GUI_Map  extends JFrame
 	private Algorithems algo; 
 	private JMenuBar menuBarstatic;
 	private JMenu fileMenu , game_menu ,speed,csv;
-	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open;
+	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit,custom_pacman;
+	private JTextArea text_range,text_speed,text_gps,text_weight;
+	private JLabel label;
+	private JButton make_pacman_custom,make_fruit_custom;
 	public GUI_Map(Map map) throws IOException 
 	{
 		super("Pack Man Map");
@@ -31,12 +34,16 @@ public class GUI_Map  extends JFrame
 		backgroundImage = map.getBackgroundImage();
 
 		menuBarstatic = new JMenuBar(); // Window menu bar
-
-		fileMenu = new JMenu("File"); // Create File menu
+		text_gps = new JTextArea("please write gps here like this: x,y,z ", 10, 10); 
+		text_weight=new JTextArea("please write the weight", 10, 10); 
+		text_range=new JTextArea("please write the range", 10, 10); 
+		text_speed=new JTextArea("please write the speed of pacman", 10, 10); 
+	
+        fileMenu = new JMenu("File"); // Create File menu
 		game_menu = new JMenu("game"); // Create Elements menu
 		speed = new JMenu("Speed"); // Create File menu
 		csv=new JMenu("improt/export");
-
+		label = new JLabel("nothing entered"); 
 		menuBarstatic.add(fileMenu); // Add the file menu
 		menuBarstatic.add(game_menu); // Add the element menu
 		menuBarstatic.add(speed); // Add the element menu
@@ -63,14 +70,21 @@ public class GUI_Map  extends JFrame
 		new_file.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		open = new JMenuItem("open");
 		open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-
+		kml = new JMenuItem("make kml");
+		kml.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_pacman = new JMenuItem("custom_pacman");
+		custom_pacman.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_fruit = new JMenuItem("custom_fruit");
+		custom_fruit.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		speed.add(slowdown);
 		speed.addSeparator();
 		speed.add(fast_forwards);
 
 		game_menu.add(fruit);
-		game_menu.addSeparator();
 		game_menu.add(packman);
+		game_menu.addSeparator();
+		game_menu.add(custom_fruit);
+		game_menu.add(custom_pacman);
 
 		fileMenu.add(new_file);
 		fileMenu.addSeparator();
@@ -82,7 +96,8 @@ public class GUI_Map  extends JFrame
 		csv.add(open);
 		csv.addSeparator();
 		csv.add(save);
-
+		csv.addSeparator();
+		csv.add(kml);
 		setJMenuBar(menuBarstatic);
 
 		Handler handler = new Handler();
@@ -98,7 +113,9 @@ public class GUI_Map  extends JFrame
 		save.addActionListener(handler);
 		new_file.addActionListener(handler);
 		open.addActionListener(handler);
-
+		kml.addActionListener(handler);
+		custom_fruit.addActionListener(handler);
+		custom_pacman.addActionListener(handler);
 	}
 	public BufferedImage get_packman() throws IOException
 	{
@@ -245,6 +262,29 @@ public class GUI_Map  extends JFrame
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			}
+			if(e.getSource()==kml)
+			{
+				System.out.println(kml);
+			}
+			if(e.getSource()==custom_pacman)
+			{
+				menuBarstatic.add(text_gps);
+				menuBarstatic.add(text_range);
+				menuBarstatic.add(text_weight);
+			}
+			if(e.getSource()==custom_fruit)
+			{
+				menuBarstatic.add(text_gps);
+				menuBarstatic.add(text_weight);
+				menuBarstatic.add(make_fruit_custom);
+			}
+			if(e.getSource()==make_fruit_custom)
+			{
+			}
+			if(e.getSource()==make_pacman_custom)
+			{
+				
 			}
 		}
 	}
