@@ -9,25 +9,35 @@ import java.util.Random;
 
 import Coords.MyCoords;
 import Geom.Point3D;
+import Map.Map;
 import entities.Fruit;
 import entities.Game;
 import entities.Packman;
 import entities.Path;
 
 public class Algorithems {
+	
 	MyCoords cord=new MyCoords();
 
-	double ORIGIN_LON =35.202155;
-	double ORIGIN_LAT = 32.106162;
-	double CORNER_LON = 35.212514;
-	double CORNER_LAT = 32.102010;
-	final Point3D ORIGIN = new Point3D(ORIGIN_LAT, ORIGIN_LON , 0 );
-	final double TOTAL_DISTANCE_X = cord.distance3d(ORIGIN, new Point3D(ORIGIN_LAT , CORNER_LON ,0));
-	final double TOTAL_DISTANCE_Y = cord.distance3d(ORIGIN, new Point3D(CORNER_LAT , ORIGIN_LON , 0));
-	final double TOTAL_DISTANCE_ANGEL_LON = CORNER_LON - ORIGIN_LON;
-	final double TOTAL_DISTANCE_ANGEL_LAT = CORNER_LAT - ORIGIN_LAT;
+	double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT;
+	final Point3D ORIGIN;
+	private double TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
 	Random randomNum = new Random();
 
+	
+	public Algorithems(Map map)
+	{
+		super();
+		ORIGIN_LON = map.getLeft_bottom_corner().y();
+		CORNER_LAT = map.getLeft_bottom_corner().x();
+		CORNER_LON = map.getRight_top_corner().y();
+		ORIGIN_LAT = map.getRight_top_corner().x();
+		ORIGIN = new Point3D(ORIGIN_LAT, ORIGIN_LON , 0 );
+		TOTAL_DISTANCE_X = cord.distance3d(ORIGIN, new Point3D(ORIGIN_LAT , CORNER_LON ,0));
+		TOTAL_DISTANCE_Y = cord.distance3d(ORIGIN, new Point3D(CORNER_LAT , ORIGIN_LON , 0));
+		TOTAL_DISTANCE_ANGEL_LON = CORNER_LON - ORIGIN_LON;
+		TOTAL_DISTANCE_ANGEL_LAT = CORNER_LAT - ORIGIN_LAT;
+	}
 	public Point3D convert_pixel_to_gps(Point3D pixel , int height, int  width)
 	{
 		return new Point3D(ORIGIN_LAT + (pixel.y()/height)*(TOTAL_DISTANCE_ANGEL_LAT),ORIGIN_LON+(pixel.x()/width)*(TOTAL_DISTANCE_ANGEL_LON) , pixel.z());
@@ -149,8 +159,6 @@ public class Algorithems {
 			temp_game.getPackman_list().get(packman_to_put).setGps(fruit_edge);
 			temp_game.getFruit_list().remove(array_min[packman_to_put]).getGps();
 		}
-
-
 		for (int i=0;i<game.getFruit_list().size();i++)
 			paths_greedy_free = adjustments(paths_greedy_free);
 
@@ -239,6 +247,31 @@ public class Algorithems {
 			}
 		}
 		return paths;
+	}
+	
+	public Point3D get_location_by_time(Path path ,Double time)
+	{
+		double time_left = time;
+		double temp_time;
+		for (int i =0 ; i<path.getLocations().size()-1;i++)
+		{
+			temp_time = cord.distance3d(path.getLocations().get(i) ,path.getLocations().get(i+1))/path.getMy_packman().getSpeed();
+			if (temp_time<time_left)
+			{
+				time_left = time_left - temp_time;
+			}
+			else
+			{
+				Point3D meters_start = convert_gps_to_meters(path.getLocations().get(i));
+				Point3D meters_end = convert_gps_to_meters(path.getLocations().get(i+1));
+				Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
+				double t = time_left/temp_time;
+				Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
+				Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
+				return convert_meters_to_gps(final_point_meters);	
+			}
+		}
+		return path.getLocations().get(path.getLocations().size()-1);
 	}
 }
 
