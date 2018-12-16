@@ -13,13 +13,11 @@ import Geom.Point3D;
 public class Path {
 
 	Random randomNum = new Random();
-	Algorithems algorithems = new Algorithems();
 	private Packman my_packman;
 	private double time = 0.0;
 	private Color color;
 	private ArrayList<Point3D> locations = new ArrayList<Point3D>();
 	MyCoords cord = new MyCoords();
-	Algorithems algo = new Algorithems();
 
 	public Path(Packman my_packman) {
 		super();
@@ -71,40 +69,16 @@ public class Path {
 		return temp_path;
 		
 	}
-	public double get_time_between_2_points(Point3D start , Point3D end)
-	{
-		return cord.distance3d(start, end)/my_packman.getSpeed();
-	}
-	public Point3D get_location_by_time(Double time)
-	{
-		double time_left = time;
-		double temp_time;
-		for (int i =0 ; i<locations.size()-1;i++)
-		{
-			temp_time = get_time_between_2_points(locations.get(i) ,locations.get(i+1));
-			if (temp_time<time_left)
-			{
-				time_left = time_left - temp_time;
-			}
-			else
-			{
-				Point3D meters_start = algo.convert_gps_to_meters(locations.get(i));
-				Point3D meters_end = algo.convert_gps_to_meters(locations.get(i+1));
-				Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
-				double t = time_left/temp_time;
-				Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
-				Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
-				return algo.convert_meters_to_gps(final_point_meters);	
-			}
-		}
-		return locations.get(locations.size()-1);
-		
-	}
 	
-	
+	public Packman getMy_packman() {
+		return my_packman;
+	}
+	public void setMy_packman(Packman my_packman) {
+		this.my_packman = my_packman;
+	}
 	@Override
 	public String toString() {
-		return "Path [algorithems=" + algorithems + ", my_packman=" + my_packman + ", time=" + time + ", locations="
+		return "Path [algorithems=" + ", my_packman=" + my_packman + ", time=" + time + ", locations="
 				+ locations + "]";
 	}
 	
