@@ -25,13 +25,11 @@ import entities.Packman;
 import entities.Path;
 
 public class Algorithems {
-	
-	MyCoords cord=new MyCoords();
-	private Point3D ORIGIN;
+
+	MyCoords cord=new MyCoords(); 
 	private double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT , TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
 	Random randomNum = new Random();
 
-	
 	public Algorithems(Map map)
 	{
 		super();
@@ -39,28 +37,59 @@ public class Algorithems {
 		CORNER_LAT = map.getLeft_bottom_corner().x();
 		CORNER_LON = map.getRight_top_corner().y();
 		ORIGIN_LAT = map.getRight_top_corner().x();
-		ORIGIN = new Point3D(ORIGIN_LAT, ORIGIN_LON , 0 );
+		Point3D ORIGIN = new Point3D(ORIGIN_LAT, ORIGIN_LON , 0 );
 		TOTAL_DISTANCE_X = cord.distance3d(ORIGIN, new Point3D(ORIGIN_LAT , CORNER_LON ,0));
 		TOTAL_DISTANCE_Y = cord.distance3d(ORIGIN, new Point3D(CORNER_LAT , ORIGIN_LON , 0));
 		TOTAL_DISTANCE_ANGEL_LON = CORNER_LON - ORIGIN_LON;
 		TOTAL_DISTANCE_ANGEL_LAT = CORNER_LAT - ORIGIN_LAT;
 	}
+	/**
+	 * 
+	 * @param pixel current pixel point
+	 * @param height total pixel height
+	 * @param width total pixel width
+	 * @return the gps value of the location
+	 */
 	public Point3D convert_pixel_to_gps(Point3D pixel , int height, int  width)
 	{
 		return new Point3D(ORIGIN_LAT + (pixel.y()/height)*(TOTAL_DISTANCE_ANGEL_LAT),ORIGIN_LON+(pixel.x()/width)*(TOTAL_DISTANCE_ANGEL_LON) , pixel.z());
 	}
+	/**
+	 * 
+	 * @param gps current location
+	 * @param height total pixel height
+	 * @param width total pixel width
+	 * @return the pixel coordinates 
+	 */
 	public Point3D convert_gps_to_pixel(Point3D gps  , int height, int width )
 	{
 		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
+	/**
+	 * 
+	 * @param meters current meters location
+	 * @return gps location
+	 */
 	public Point3D convert_meters_to_gps(Point3D meters)
 	{
 		return new Point3D(ORIGIN_LAT + meters.y()/TOTAL_DISTANCE_Y*(TOTAL_DISTANCE_ANGEL_LAT) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(TOTAL_DISTANCE_ANGEL_LON) , meters.z());
 	}
+	/**
+	 * 
+	 * @param gps current gps location
+	 * @return meters location
+	 */
 	public Point3D convert_gps_to_meters(Point3D gps)
 	{
 		return new Point3D(TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON) ,TOTAL_DISTANCE_Y*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
+	/**
+	 * 
+	 * @param start starting point 
+	 * @param end where needed to go
+	 * @param range the packmans radius of eating
+	 * @return the point where the packman can stop and eat the fruit
+	 */
 	public Point3D edge_until_eat(Point3D start , Point3D end , double range)
 	{
 		if(cord.distance3d(start, end)<=range)
@@ -72,6 +101,12 @@ public class Algorithems {
 		return convert_meters_to_gps(new Point3D(meters_start.x()+vect.x()*t ,meters_start.y()+vect.y()*t , meters_start.z()+vect.z()*t));
 	}
 
+	/**
+	 * 
+	 * @param path_of_csv location of the csv file
+	 * @return a fully loaded game
+	 * @throws IOException exception
+	 */
 	public Game get_data_from_csv(String path_of_csv) throws IOException
 	{
 		Game csv_game = new Game();	
@@ -94,6 +129,12 @@ public class Algorithems {
 		}
 		return csv_game;
 	}
+	/**
+	 * 
+	 * @param game the fully loaded game to export
+	 * @param path_file_name where to save the file
+	 * @throws IOException exception
+	 */
 	public void create_csv_from_game(Game game , String path_file_name) throws IOException
 	{
 		FileWriter fileWriter = new FileWriter(path_file_name);
@@ -109,16 +150,24 @@ public class Algorithems {
 		fileWriter.flush();
 		fileWriter.close();
 	}
-
+	/**
+	 * 
+	 * @param paths list of paths
+	 * @return the time of max path
+	 */
 	public double get_max_path_time(Path [] paths)
 	{
 		double max =0;
 		for(Path path : paths)
 			max = (max<path.get_total_time()) ? path.get_total_time() : max;
 			return max;
-
 	}
 
+	/**
+	 * 
+	 * @param paths list of paths
+	 * @return the path that takes the longest to finish his path
+	 */
 	public int get_max_path(Path [] paths)
 	{
 		int max_path =0;
@@ -133,6 +182,11 @@ public class Algorithems {
 		}
 		return max_path;
 	}
+	/**
+	 * 
+	 * @param game the fully loaded game 
+	 * @return the list of paths for the packmans to go
+	 */
 	public Path[] TSP(Game game)
 	{
 		Path[] paths_greedy_free = new Path [game.getPackman_list().size()];
@@ -182,6 +236,11 @@ public class Algorithems {
 	}
 
 
+	/**
+	 * 
+	 * @param game the fully loaded game
+	 * @return the matrix of time distances and the min value
+	 */
 	public MatrixMin get_matrix_min(Game game)
 	{
 		double min_value;
@@ -203,6 +262,11 @@ public class Algorithems {
 		}
 		return matrixmin;
 	}
+	/**
+	 * 
+	 * @param paths list of paths
+	 * @return the same list of paths after the adjustments
+	 */
 	public Path[] adjustments(Path[] paths)
 	{
 		if (paths.length>1)
@@ -212,11 +276,23 @@ public class Algorithems {
 		return paths;
 	}
 
+	/**
+	 * 
+	 * @param path given path
+	 * @param first_location first location to swap
+	 * @param second_location second location to swap
+	 * @return the path after the swap
+	 */
 	public Path swap(Path path ,int first_location , int second_location)
 	{
 		Collections.swap(path.getLocations(), first_location, second_location);
 		return path;
 	}
+	/**
+	 * 
+	 * @param path path to adjust
+	 * @return path after adjusted
+	 */
 	public Path adjustments_swap(Path path)
 	{
 		Path path1;
@@ -235,6 +311,12 @@ public class Algorithems {
 		}
 		return path;
 	}
+	/**
+	 * 
+	 * @param paths list of paths
+	 * @param max_path the path with the longest time
+	 * @return the list of paths after adjusted
+	 */
 	public Path[] adjusments_move_fruits(Path [] paths , int max_path)
 	{
 		Path path1 , path2;
@@ -254,7 +336,13 @@ public class Algorithems {
 		}
 		return paths;
 	}
-	
+
+	/**
+	 * 
+	 * @param path the path
+	 * @param time how long till given point
+	 * @return the location of where the packman is after certain time
+	 */
 	public Point3D get_location_by_time(Path path ,Double time)
 	{
 		double time_left = time;
@@ -278,57 +366,35 @@ public class Algorithems {
 		}
 		return path.getLocations().get(path.getLocations().size()-1);
 	}
-	public void export_kml(Path[] paths , String out_dir , String out_name)
+	/**
+	 * 
+	 * @param paths list of paths
+	 * @param out_location dir of output file
+	 */
+	public void export_kml(Path[] paths , String out_location)
 	{
 		int global_time;
 		long start_date = new Date().getTime();
 		My_GIS_project gis_project = new My_GIS_project(new My_meta_data(start_date, null , "7f00ffff"));
-		String  kmlmiddle = "";
-
 		for (Path path : paths)
 		{
 			My_GIS_layer gis_layer = new My_GIS_layer(new My_meta_data(start_date, null , "green"));	
-			String kmlstart = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-					"<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
-					+ "<Document><Style id=\"red\"><IconStyle><Icon>"
-					+ "<href>http://pluspng.com/img-png/pacman-hd-png-file-pacman-hd-png-2000.png</href>"
-					+ "</Icon></IconStyle>"
-					+ "</Style><Style id=\"yellow\"><IconStyle><Icon>"
-					+ "<href>http://pluspng.com/img-png/pacman-hd-png-file-pacman-hd-png-2000.png"
-					+ "</href></Icon></IconStyle></Style>"
-					+ "<Style id=\"green\"><IconStyle><Icon>"
-					+ "<href>http://pluspng.com/img-png/pacman-hd-png-file-pacman-hd-png-2000.png</href></Icon>"
-					+ "</IconStyle></Style><Folder><name>Wifi Networks</name>";
 			for (global_time=0;global_time*10<get_max_path_time(paths);global_time++)
 			{
-				My_GIS_element gis_element = new My_GIS_element(new My_geom_element(get_location_by_time(path ,global_time*10.0))
-						, new My_meta_data(start_date +  TimeUnit.SECONDS.toMillis(global_time), null, "red"));
-				gis_layer.add(gis_element);
-				kmlmiddle = kmlmiddle + gis_element.toStringOfGISElements("50147814");
+				gis_layer.add(new My_GIS_element(new My_geom_element(get_location_by_time(path ,global_time*10.0)), new My_meta_data(start_date +  TimeUnit.SECONDS.toMillis(global_time), null, "red")));
 			}
-			String kmlend = "    </Folder>\n" + 
-					"  </Document> \n </kml>";
-			String kmldata = kmlstart + kmlmiddle + kmlend;
-			Writer fwriter;
-			try {
-				fwriter = new FileWriter(out_dir+out_name+".kml");
-				fwriter.write(kmldata);
-				fwriter.flush();
-				fwriter.close();
-			}catch (IOException e1) {
-				e1.printStackTrace();
-			}   
+
 		}
 		Writer fwriter;
 		try {
-			fwriter = new FileWriter(out_dir+"/"+ out_name  +".kml");
+			fwriter = new FileWriter(out_location +".kml");
 			fwriter.write(gis_project.toStringOfGISProject());
 			fwriter.flush();
 			fwriter.close();
 		}catch (IOException e1) {
 			e1.printStackTrace();
 		} 
-		
+
 	}
 }
 
