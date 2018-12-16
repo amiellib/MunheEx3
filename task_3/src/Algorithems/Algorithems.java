@@ -4,10 +4,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import Coords.MyCoords;
+import GIS.My_GIS_element;
+import GIS.My_GIS_layer;
+import GIS.My_GIS_project;
+import GIS.My_meta_data;
+import Geom.My_geom_element;
 import Geom.Point3D;
 import Map.Map;
 import entities.Fruit;
@@ -18,10 +27,8 @@ import entities.Path;
 public class Algorithems {
 	
 	MyCoords cord=new MyCoords();
-
-	double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT;
-	final Point3D ORIGIN;
-	private double TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
+	private Point3D ORIGIN;
+	private double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT , TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
 	Random randomNum = new Random();
 
 	
@@ -177,7 +184,6 @@ public class Algorithems {
 
 	public MatrixMin get_matrix_min(Game game)
 	{
-
 		double min_value;
 		MatrixMin matrixmin = new MatrixMin(new double [game.getPackman_list().size()][game.getFruit_list().size()],new int [game.getPackman_list().size()]);
 		for (int i = 0; i<game.getPackman_list().size();i++)
@@ -233,7 +239,7 @@ public class Algorithems {
 	{
 		Path path1 , path2;
 
-		for (int i =0 ; i<paths.length*30 ; i++)
+		for (int i =0 ; i<paths.length*20 ; i++)
 		{
 			int secondpackman = randomNum.nextInt(paths.length-1);
 			path1 = paths[max_path].copy();
@@ -267,11 +273,62 @@ public class Algorithems {
 				Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
 				double t = time_left/temp_time;
 				Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
-				Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
-				return convert_meters_to_gps(final_point_meters);	
+				return convert_meters_to_gps(new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z()));	
 			}
 		}
 		return path.getLocations().get(path.getLocations().size()-1);
+	}
+	public void export_kml(Path[] paths , String out_dir , String out_name)
+	{
+		int global_time;
+		long start_date = new Date().getTime();
+		My_GIS_project gis_project = new My_GIS_project(new My_meta_data(start_date, null , "7f00ffff"));
+		String  kmlmiddle = "";
+
+		for (Path path : paths)
+		{
+			My_GIS_layer gis_layer = new My_GIS_layer(new My_meta_data(start_date, null , "green"));	
+			String kmlstart = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+					"<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+					+ "<Document><Style id=\"red\"><IconStyle><Icon>"
+					+ "<href>http://pluspng.com/img-png/pacman-hd-png-file-pacman-hd-png-2000.png</href>"
+					+ "</Icon></IconStyle>"
+					+ "</Style><Style id=\"yellow\"><IconStyle><Icon>"
+					+ "<href>http://pluspng.com/img-png/pacman-hd-png-file-pacman-hd-png-2000.png"
+					+ "</href></Icon></IconStyle></Style>"
+					+ "<Style id=\"green\"><IconStyle><Icon>"
+					+ "<href>http://pluspng.com/img-png/pacman-hd-png-file-pacman-hd-png-2000.png</href></Icon>"
+					+ "</IconStyle></Style><Folder><name>Wifi Networks</name>";
+			for (global_time=0;global_time*10<get_max_path_time(paths);global_time++)
+			{
+				My_GIS_element gis_element = new My_GIS_element(new My_geom_element(get_location_by_time(path ,global_time*10.0))
+						, new My_meta_data(start_date +  TimeUnit.SECONDS.toMillis(global_time), null, "red"));
+				gis_layer.add(gis_element);
+				kmlmiddle = kmlmiddle + gis_element.toStringOfGISElements("50147814");
+			}
+			String kmlend = "    </Folder>\n" + 
+					"  </Document> \n </kml>";
+			String kmldata = kmlstart + kmlmiddle + kmlend;
+			Writer fwriter;
+			try {
+				fwriter = new FileWriter(out_dir+out_name+".kml");
+				fwriter.write(kmldata);
+				fwriter.flush();
+				fwriter.close();
+			}catch (IOException e1) {
+				e1.printStackTrace();
+			}   
+		}
+		Writer fwriter;
+		try {
+			fwriter = new FileWriter(out_dir+"/"+ out_name  +".kml");
+			fwriter.write(gis_project.toStringOfGISProject());
+			fwriter.flush();
+			fwriter.close();
+		}catch (IOException e1) {
+			e1.printStackTrace();
+		} 
+		
 	}
 }
 

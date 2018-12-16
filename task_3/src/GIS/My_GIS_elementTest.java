@@ -10,7 +10,7 @@ import Geom.My_geom_element;
 import Geom.Point3D;
 
 class My_GIS_elementTest {
-
+/*
 	@Test
 	void testMy_GIS_element() {
 		try {
@@ -25,5 +25,5 @@ class My_GIS_elementTest {
 		my_GIS_element.translate(new Point3D(10,10,10));
 		assertTrue(20.0001 <=my_GIS_element.getMy_geom().x()&&20.0002 >=my_GIS_element.getMy_geom().x()&&20.00000<=my_GIS_element.getMy_geom().y()&&20.0001>=my_GIS_element.getMy_geom().y()&&17.4643<=my_GIS_element.getMy_geom().z()&&17.4644>=my_GIS_element.getMy_geom().z());
 	}
-
+*/
 }
