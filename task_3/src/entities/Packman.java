@@ -26,7 +26,6 @@ public class Packman
 		try {
 			packman_image = ImageIO.read(new File("src/resources/packman.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -52,7 +52,6 @@ public class Path {
 		Point3D current_location = iter.next();
 		while (iter.hasNext())
 		{
-			//Point3D temp_location = algorithems.edge_until_eat(current_location, iter.next(), my_packman.getRange());
 			Point3D temp_location = iter.next();
 			total_distance += cord.distance3d(current_location,temp_location);
 			current_location = temp_location;
@@ -80,7 +79,6 @@ public class Path {
 	{
 		double time_left = time;
 		double temp_time;
-		Point3D temp_location = locations.get(0);
 		for (int i =0 ; i<locations.size()-1;i++)
 		{
 			temp_time = get_time_between_2_points(locations.get(i) ,locations.get(i+1));
@@ -93,7 +91,6 @@ public class Path {
 				Point3D meters_start = algo.convert_gps_to_meters(locations.get(i));
 				Point3D meters_end = algo.convert_gps_to_meters(locations.get(i+1));
 				Point3D vect = new Point3D(meters_end.x() - meters_start.x() , meters_end.y() - meters_start.y() , meters_end.z() - meters_start.z());
-				double totalD =  Math.sqrt(vect.x()*vect.x() + vect.y()*vect.y() + vect.z()*vect.z());
 				double t = time_left/temp_time;
 				Point3D newvec = new Point3D(vect.x()*t , vect.y()*t ,vect.z()*t);
 				Point3D final_point_meters = new Point3D(meters_start.x()+newvec.x() ,meters_start.y()+newvec.y() , meters_start.z()+newvec.z());
