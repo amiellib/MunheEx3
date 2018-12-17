@@ -23,7 +23,7 @@ public class GUI_Map  extends JFrame
 	private Algorithems algo; 
 	private JMenuBar menuBarstatic;
 	private JMenu fileMenu , game_menu ,speed,csv;
-	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range;
+	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range,custom_packman_hight,custom_fruit_hight;
 	private Double packman_speed = 1.0 , packman_range =1.0 , fruit_weight =1.0;
 	public GUI_Map(Map map) throws IOException 
 	{
@@ -71,7 +71,11 @@ public class GUI_Map  extends JFrame
 		custom_fruit_whight.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_packman_range = new JMenuItem("custom packman range");
 		custom_packman_range.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		
+		custom_packman_hight = new JMenuItem("custom packman hight");
+		custom_packman_hight.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_fruit_hight= new JMenuItem("custom fruit hight");
+		custom_fruit_hight.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+
 		speed.add(slowdown);
 		speed.addSeparator();
 		speed.add(fast_forwards);
@@ -80,9 +84,12 @@ public class GUI_Map  extends JFrame
 		game_menu.add(packman);
 		game_menu.addSeparator();
 		game_menu.add(custom_fruit_whight);
+		game_menu.add(custom_fruit_hight);
 		game_menu.addSeparator();
 		game_menu.add(custom_packman_speed);
 		game_menu.add(custom_packman_range);
+		game_menu.add(custom_packman_hight);
+
 
 		fileMenu.add(new_file);
 		fileMenu.addSeparator();
@@ -115,7 +122,8 @@ public class GUI_Map  extends JFrame
 		custom_packman_range.addActionListener(handler);
 		custom_packman_speed.addActionListener(handler);
 		custom_fruit_whight.addActionListener(handler);
-		
+		custom_packman_hight.addActionListener(handler);
+		custom_fruit_hight.addActionListener(handler);
 		
 	}
 	public BufferedImage get_packman() throws IOException
@@ -285,6 +293,17 @@ public class GUI_Map  extends JFrame
 				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman speed"));
 	            System.out.println(packman_speed);
 
+			}
+			if(e.getSource()==custom_packman_hight)
+			{
+				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman hight"));
+	            System.out.println(packman_speed);
+
+			}
+			if(e.getSource()==custom_fruit_hight)
+			{
+				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit hight"));
+	            System.out.println(packman_speed);
 			}
 		}
 	}
