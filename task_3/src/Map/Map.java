@@ -8,10 +8,21 @@ import javax.imageio.ImageIO;
 
 import Geom.Point3D;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class Map {
 	private Point3D left_bottom_corner ; 
 	private Point3D right_top_corner ; 
 	private BufferedImage backgroundImage;
+	/**
+	 * 
+	 * @param left_bottom_corner is the left bottom corner gps point
+	 * @param right_top_corner is the right top corner corner gps point
+	 * @param fileName is the file name and directory to the file image
+	 */
 	public Map(Point3D left_bottom_corner, Point3D right_top_corner, String fileName) {
 		super();
 		this.left_bottom_corner = left_bottom_corner;
