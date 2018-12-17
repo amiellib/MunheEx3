@@ -186,8 +186,9 @@ public class Algorithems
 	 * @param game the fully loaded game 
 	 * @return the list of paths for the packmans to go
 	 */
-	public Path[] TSP(Game game)
+	public Path[] TSP(Game game , double  accuracy)
 	{
+		this.accuracy = accuracy;
 		Path[] paths_greedy_free = new Path [game.getPackman_list().size()];
 		int counter =0;
 		for (Packman this_packman : game.getPackman_list())
@@ -295,16 +296,18 @@ public class Algorithems
 	public Path adjustments_swap(Path path)
 	{
 		Path path1;
-		for (int i =0 ; i<(path.getLocations().size()-2)*accuracy ; i++)
+		for (int i =0 ; i<(path.getLocations().size()-2)*(path.getLocations().size()-1)*accuracy/10 ; i++)
 		{
 			path1 = path.copy();
-			swap(path1 , 1 + randomNum.nextInt(path1.getLocations().size()-1) , 1 + randomNum.nextInt(path1.getLocations().size()-1));
-			if (path1.get_total_time()<path.get_total_time())
+			for (int j =0 ; j<(path.getLocations().size()-2) ; j++)
 			{
-				path = path1.copy();
-				break;
+				swap(path1 , 1 + randomNum.nextInt(path1.getLocations().size()-1) , 1 + randomNum.nextInt(path1.getLocations().size()-1));
+				if (path1.get_total_time()<path.get_total_time())
+				{
+					path = path1.copy();
+					break;
+				}
 			}
-
 		}
 		return path;
 	}
