@@ -23,7 +23,7 @@ public class GUI_Map  extends JFrame
 	private Algorithems algo; 
 	private JMenuBar menuBarstatic;
 	private JMenu fileMenu , game_menu ,speed,csv;
-	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range,custom_packman_height,custom_fruit_height;
+	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range,custom_packman_height,custom_fruit_height,accuracy;
 	private Double packman_speed = 1.0 , packman_range =1.0 , fruit_weight =1.0 , packman_height = 0.0 , fruit_height = 0.0;
 	public GUI_Map(Map map) throws IOException 
 	{
@@ -68,14 +68,15 @@ public class GUI_Map  extends JFrame
 		custom_packman_speed = new JMenuItem("custom packman speed");
 		custom_packman_speed.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_fruit_whight = new JMenuItem("custom fruit whight");
-		custom_fruit_whight.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_fruit_whight.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_packman_range = new JMenuItem("custom packman range");
 		custom_packman_range.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_packman_height = new JMenuItem("custom packman hight");
 		custom_packman_height.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_fruit_height= new JMenuItem("custom fruit hight");
 		custom_fruit_height.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-
+		accuracy= new JMenuItem("accuracy");
+		accuracy.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		speed.add(slowdown);
 		speed.addSeparator();
 		speed.add(fast_forwards);
@@ -89,6 +90,8 @@ public class GUI_Map  extends JFrame
 		game_menu.add(custom_packman_speed);
 		game_menu.add(custom_packman_range);
 		game_menu.add(custom_packman_height);
+		game_menu.addSeparator();
+		game_menu.add(accuracy);
 
 
 		fileMenu.add(new_file);
@@ -124,7 +127,7 @@ public class GUI_Map  extends JFrame
 		custom_fruit_whight.addActionListener(handler);
 		custom_packman_height.addActionListener(handler);
 		custom_fruit_height.addActionListener(handler);
-		
+		accuracy.addActionListener(handler);
 	}
 	public BufferedImage get_packman() throws IOException
 	{
@@ -305,6 +308,10 @@ public class GUI_Map  extends JFrame
 			if(e.getSource()==custom_fruit_height)
 			{
 				fruit_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit height"));
+	            System.out.println(fruit_height);
+			}
+			if(e.getSource()==accuracy)
+			{
 	            System.out.println(fruit_height);
 			}
 		}
