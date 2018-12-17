@@ -11,10 +11,15 @@ import Algorithems.Algorithems;
 import Geom.Point3D;
 import entities.*;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class GUI_Map  extends JFrame 
 {
 
-	private String[] packmans = {"src/resources/packman_eating_3.jpeg" , "src/resources/packman_eating2.png" ,"src/resources/packman_eating1.png" , "src/resources/packman_eating2.png" };
+	private String[] packmans = {"src/resources/packman_eating_3.png" , "src/resources/packman_eating2.png" ,"src/resources/packman_eating1.png" , "src/resources/packman_eating2.png" };
 	private boolean is_packman = false , is_fruit = false , run_program = false;
 	private int fruit_id = 0 , packman_id =0 , packman_counter =0 , global_time;
 	private Game my_game = new Game();
@@ -126,11 +131,19 @@ public class GUI_Map  extends JFrame
 		custom_fruit_height.addActionListener(handler);
 
 	}
+	/**
+	 * this function replaces the image of the packman to visualize him eating
+	 * @return a new image of the packman
+	 * @throws IOException exception
+	 */
 	public BufferedImage get_packman() throws IOException
 	{
 		packman_counter = (++packman_counter>=packmans.length) ? 0 : packman_counter;
 		return  ImageIO.read(new File(packmans[packman_counter]));
 	}
+	/**
+	 * This function repaints the map with the data it has
+	 */
 	public void paint(Graphics g) 
 	{
 		g.drawImage(backgroundImage.getScaledInstance(this.getWidth(),this.getHeight(),backgroundImage.SCALE_SMOOTH), 0, 0, null);
@@ -167,6 +180,11 @@ public class GUI_Map  extends JFrame
 		menuBarstatic.repaint();
 	}
 
+	/**
+	 * 
+	 * @author Shilo Gilor and Amiel Liberman
+	 *
+	 */
 	public class Handler implements MouseListener , ActionListener {
 
 		@Override
@@ -197,6 +215,9 @@ public class GUI_Map  extends JFrame
 		@Override
 		public void mouseExited(MouseEvent e) {}
 
+		/**
+		 * This is the action done function
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
@@ -332,6 +353,9 @@ public class GUI_Map  extends JFrame
 			}
 		}
 	}
+	/**
+	 * This is the new thread that repaints the movement of the packman
+	 */
 	public void thread_repainter()  
 	{
 		try
@@ -349,6 +373,9 @@ public class GUI_Map  extends JFrame
 	public Algorithems getAlgo() {
 		return algo;
 	}	
+	/**
+	 * This function resets the data in the map
+	 */
 	public void reset_params()
 	{
 		packman_speed = 1.0;

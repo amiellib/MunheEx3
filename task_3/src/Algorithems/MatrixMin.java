@@ -2,10 +2,20 @@ package Algorithems;
 
 import java.util.Arrays;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class MatrixMin {
 
 	double[][] matrix ;
 	int[] array_min;
+	/**
+	 * 
+	 * @param matrix is the distance matrix
+	 * @param array_min is the array of locations in the matrix of the lowest distance from packman
+	 */
 	public MatrixMin(double[][] matrix, int[] array_min) {
 		super();
 		this.matrix = matrix;
