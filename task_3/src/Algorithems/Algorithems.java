@@ -5,7 +5,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
@@ -371,30 +374,205 @@ public class Algorithems {
 	 * @param paths list of paths
 	 * @param out_location dir of output file
 	 */
-	public void export_kml(Path[] paths , String out_location)
+	public void export_kml(Path[] paths ,Game game , String out_location)
 	{
+	    LocalDateTime now_start = LocalDateTime.now();
+	    LocalDateTime temp_time;
+	    now_start.minusSeconds(10);
 		int global_time;
-		long start_date = new Date().getTime();
-		My_GIS_project gis_project = new My_GIS_project(new My_meta_data(start_date, null , "7f00ffff"));
+		Point3D temp ;
+		String start = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\">\n" + 
+				"<Document>\n" + 
+				"<Style id=\"red\"><IconStyle><Icon>\n" + 
+				"<href>http://maps.google.com/mapfiles/ms/icons/red-dot.png</href>\n" + 
+				"</Icon></IconStyle></Style>\n" + 
+				"<Style id=\"yellow\"><IconStyle><Icon>\n" + 
+				"<href>http://maps.google.com/mapfiles/ms/icons/yellow-dot.png</href>\n" + 
+				"</Icon></IconStyle></Style>\n" + 
+				"<Style id=\"green\"><IconStyle><Icon>\n" + 
+				"<href>http://maps.google.com/mapfiles/ms/icons/green-dot.png</href>\n" + 
+				"</Icon></IconStyle>\n" + 
+				"</Style><Style id=\"track_n\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <scale>.5</scale>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>\n" + 
+				"       </Icon>\n" + 
+				"      </IconStyle>\n" + 
+				"      <LabelStyle>\n" + 
+				"        <scale>0</scale>\n" + 
+				"      </LabelStyle>\n" + 
+				"\n" + 
+				"    </Style>\n" + 
+				"    <!-- Highlighted track style -->\n" + 
+				"    <Style id=\"track_h\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <scale>1.2</scale>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>\n" + 
+				"        </Icon>\n" + 
+				"      </IconStyle>\n" + 
+				"    </Style>\n" + 
+				"    <StyleMap id=\"track\">\n" + 
+				"      <Pair>\n" + 
+				"        <key>normal</key>\n" + 
+				"        <styleUrl>#track_n</styleUrl>\n" + 
+				"      </Pair>\n" + 
+				"      <Pair>\n" + 
+				"        <key>highlight</key>\n" + 
+				"        <styleUrl>#track_h</styleUrl>\n" + 
+				"      </Pair>\n" + 
+				"    </StyleMap>\n" + 
+				"    <!-- Normal multiTrack style -->\n" + 
+				"    <Style id=\"multiTrack_n\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://earth.google.com/images/kml-icons/track-directional/track-0.png</href>\n" + 
+				"        </Icon>\n" + 
+				"      </IconStyle>\n" + 
+				"      <LineStyle>\n" + 
+				"        <color>99ffac59</color>\n" + 
+				"        <width>6</width>\n" + 
+				"      </LineStyle>\n" + 
+				"\n" + 
+				"    </Style>\n" + 
+				"    <!-- Highlighted multiTrack style -->\n" + 
+				"    <Style id=\"multiTrack_h\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <scale>1.2</scale>\n" + 
+				"        <Icon>\n" + 
+				"        </Icon>\n" + 
+				"      </IconStyle>\n" + 
+				"      <LineStyle>\n" + 
+				"        <color>99ffac59</color>\n" + 
+				"        <width>8</width>\n" + 
+				"      </LineStyle>\n" + 
+				"    </Style>\n" + 
+				"    <StyleMap id=\"multiTrack\">\n" + 
+				"      <Pair>\n" + 
+				"        <key>normal</key>\n" + 
+				"        <styleUrl>#multiTrack_n</styleUrl>\n" + 
+				"      </Pair>\n" + 
+				"      <Pair>\n" + 
+				"        <key>highlight</key>\n" + 
+				"        <styleUrl>#multiTrack_h</styleUrl>\n" + 
+				"      </Pair>\n" + 
+				"    </StyleMap>\n" + 
+				"    <!-- Normal waypoint style -->\n" + 
+				"    <Style id=\"waypoint_n\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>\n" + 
+				"        </Icon>\n" + 
+				"      </IconStyle>\n" + 
+				"    </Style>\n" + 
+				"    <!-- Highlighted waypoint style -->\n" + 
+				"    <Style id=\"waypoint_h\">\n" + 
+				"      <IconStyle>\n" + 
+				"        <scale>1.2</scale>\n" + 
+				"        <Icon>\n" + 
+				"          <href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>\n" + 
+				"        </Icon>\n" + 
+				"      </IconStyle>\n" + 
+				"    </Style>\n" + 
+				"    <StyleMap id=\"waypoint\">\n" + 
+				"      <Pair>\n" + 
+				"        <key>normal</key>\n" + 
+				"        <styleUrl>#waypoint_n</styleUrl>\n" + 
+				"      </Pair>\n" + 
+				"      <Pair>\n" + 
+				"        <key>highlight</key>\n" + 
+				"        <styleUrl>#waypoint_h</styleUrl>\n" + 
+				"      </Pair>\n" + 
+				"    </StyleMap>\n" + 
+				"    <Style id=\"lineStyle\">\n" + 
+				"      <LineStyle>\n" + 
+				"        <color>99ffac59</color>\n" + 
+				"        <width>6</width>\n" + 
+				"      </LineStyle>\n" + 
+				"    </Style>null";
+		String packmans_kml = "<Folder> <name>packmans</name>";
+		for (Packman packman :game.getPackman_list())
+		{
+			packmans_kml += "<Placemark>\n" + 
+					"<styleUrl>#red</styleUrl>\n"
+					+ "<ExtendedData>\n" + 
+					"      <Data name=\"packman id\">\n" + 
+					"        <value>" +packman.getPackman_id() +"</value>\n" + 
+					"      </Data>\n" + 
+					"      <Data name=\"packman radius\">\n" + 
+					"        <value>" + packman.getRange()+"</value>\n" + 
+					"      </Data>\n" + 
+					"      <Data name=\"packman speed\">\n" + 
+					"        <value>" + packman.getSpeed() +"</value>\n" + 
+					"      </Data>\n" + 
+					"    </ExtendedData>" +
+					
+					"<Point>\n" + 
+					"<coordinates>" +packman.getGps().y() + " " + packman.getGps().x() + " " +packman.getGps().z() + " " +"</coordinates>\n" + 
+					"</Point>\n" + 
+					"</Placemark>";
+		}
+		packmans_kml += "</Folder>";
+		String fruits_kml = "<Folder> <name>fruits</name>";
+		for (Fruit fruit :game.getFruit_list())
+		{
+			fruits_kml += "<Placemark>\n" + 
+					"<styleUrl>#yellow</styleUrl>\n" + 
+					 "<ExtendedData>\n" + 
+						"      <Data name=\"fruit id\">\n" + 
+						"        <value>" +fruit.getFruit_id() +"</value>\n" + 
+						"      </Data>\n" + 
+						"      <Data name=\"fruit weight\">\n" + 
+						"        <value>" + fruit.getWeight() + "</value>\n" + 
+						"      </Data>\n" + 
+
+						"    </ExtendedData>"+
+					"<Point>\n" + 
+					"<coordinates>" +fruit.getGps().y() + " " + fruit.getGps().x() + " " +fruit.getGps().z() + " " +"</coordinates>\n" + 
+					"</Point>\n" + 
+					"</Placemark>";
+		}
+		fruits_kml += "</Folder> ";
+		
+		
+		
+		
+		String track =" <Folder>\n";
+		int counter =0;
 		for (Path path : paths)
 		{
-			My_GIS_layer gis_layer = new My_GIS_layer(new My_meta_data(start_date, null , "green"));	
+			temp_time = now_start;
+			track += "<Placemark>"+
+					"  <name>packman id " + game.getPackman_list().get(counter).getPackman_id()+"</name>\n" + 
+					"<styleUrl>#multiTrack</styleUrl><gx:Track>";
+							
+					
 			for (global_time=0;global_time*10<get_max_path_time(paths);global_time++)
 			{
-				gis_layer.add(new My_GIS_element(new My_geom_element(get_location_by_time(path ,global_time*10.0)), new My_meta_data(start_date +  TimeUnit.SECONDS.toMillis(global_time), null, "red")));
+				temp_time = temp_time.plusSeconds(10);
+				temp =get_location_by_time(path ,global_time*10.0);
+				track +="<when>" + temp_time + "</when>\n" + 
+						"<gx:coord>" + temp.y() +"  " + temp.x() + "  " + temp.z() +"</gx:coord>\n";
 			}
-
-		}
+			track+= "</gx:Track>\n" + 
+					"</Placemark>";
+			counter ++;
+		}		
+		track +=" </Folder>\n";
+		String end = "</Document>\n" + 
+				"</kml>";
+		String final_string = start + track + fruits_kml + packmans_kml + end;
 		Writer fwriter;
 		try {
 			fwriter = new FileWriter(out_location +".kml");
-			fwriter.write(gis_project.toStringOfGISProject());
+			fwriter.write(final_string);
 			fwriter.flush();
 			fwriter.close();
 		}catch (IOException e1) {
 			e1.printStackTrace();
 		} 
-
 	}
 }
 
