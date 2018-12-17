@@ -23,7 +23,8 @@ public class GUI_Map  extends JFrame
 	private Algorithems algo; 
 	private JMenuBar menuBarstatic;
 	private JMenu fileMenu , game_menu ,speed,csv;
-	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_pacman_speed,custom_pacman_range;
+	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range;
+	private Double packman_speed = 1.0 , packman_range =1.0 , fruit_weight =1.0;
 	public GUI_Map(Map map) throws IOException 
 	{
 		super("Pack Man Map");
@@ -56,7 +57,7 @@ public class GUI_Map  extends JFrame
 		save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		fruit = new JMenuItem("fruit");
 		fruit.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		packman = new JMenuItem("pacman");
+		packman = new JMenuItem("packman");
 		packman.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		new_file = new JMenuItem("new");
 		new_file.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -64,12 +65,12 @@ public class GUI_Map  extends JFrame
 		open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		kml = new JMenuItem("make kml");
 		kml.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		custom_pacman_speed = new JMenuItem("custom pacman speed");
-		custom_pacman_speed.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_packman_speed = new JMenuItem("custom packman speed");
+		custom_packman_speed.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_fruit_whight = new JMenuItem("custom fruit whight");
 		custom_fruit_whight.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		custom_pacman_range = new JMenuItem("custom pacman range");
-		custom_pacman_range.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_packman_range = new JMenuItem("custom packman range");
+		custom_packman_range.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		
 		speed.add(slowdown);
 		speed.addSeparator();
@@ -80,8 +81,8 @@ public class GUI_Map  extends JFrame
 		game_menu.addSeparator();
 		game_menu.add(custom_fruit_whight);
 		game_menu.addSeparator();
-		game_menu.add(custom_pacman_speed);
-		game_menu.add(custom_pacman_range);
+		game_menu.add(custom_packman_speed);
+		game_menu.add(custom_packman_range);
 
 		fileMenu.add(new_file);
 		fileMenu.addSeparator();
@@ -111,8 +112,8 @@ public class GUI_Map  extends JFrame
 		new_file.addActionListener(handler);
 		open.addActionListener(handler);
 		kml.addActionListener(handler);
-		custom_pacman_range.addActionListener(handler);
-		custom_pacman_speed.addActionListener(handler);
+		custom_packman_range.addActionListener(handler);
+		custom_packman_speed.addActionListener(handler);
 		custom_fruit_whight.addActionListener(handler);
 		
 		
@@ -163,15 +164,15 @@ public class GUI_Map  extends JFrame
 		@Override
 		public void mouseClicked(MouseEvent e) 
 		{
-			Point3D end = algo.convert_pixel_to_gps(new Point3D(e.getX()-10,e.getY()+30,0), getHeight(), getWidth());
+			Point3D point = algo.convert_pixel_to_gps(new Point3D(e.getX()-10,e.getY()+30,0), getHeight(), getWidth());
 			if (is_fruit)
 			{
-				my_game.getFruit_list().add(new Fruit(fruit_id, end , 1 ));
+				my_game.getFruit_list().add(new Fruit(fruit_id, point , fruit_weight ));
 				fruit_id++;
 			}
 			else if (is_packman)
 			{
-				my_game.getPackman_list().add(new Packman(packman_id, end , 1 ,1 ));
+				my_game.getPackman_list().add(new Packman(packman_id, point , packman_speed ,packman_range ));
 				packman_id++;
 			}
 			repaint();
@@ -269,20 +270,20 @@ public class GUI_Map  extends JFrame
 				algo.export_kml(paths, my_game, "/Users/shilo/Desktop/data/kml_first_test");
 				System.out.println(kml);
 			}
-			if(e.getSource()==custom_pacman_range)
+			if(e.getSource()==custom_packman_range)
 			{
-				String range=JOptionPane.showInputDialog(	"Enter pacman range");
-	            System.out.println(range);
+				packman_range=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman range"));
+	            System.out.println(packman_range);
 			}
 			if(e.getSource()==custom_fruit_whight)
 			{
-				String whight=JOptionPane.showInputDialog(	"Enter fruit whight");
-	            System.out.println(whight);
+				fruit_weight=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit weight"));
+	            System.out.println(fruit_weight);
 			}
-			if(e.getSource()==custom_pacman_speed)
+			if(e.getSource()==custom_packman_speed)
 			{
-				String speed=JOptionPane.showInputDialog(	"Enter pacman speed");
-	            System.out.println(speed);
+				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman speed"));
+	            System.out.println(packman_speed);
 
 			}
 		}
