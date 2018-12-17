@@ -32,8 +32,8 @@ public class GUI_Map  extends JFrame
 		backgroundImage = map.getBackgroundImage();
 
 		menuBarstatic = new JMenuBar(); // Window menu bar
-		
-        fileMenu = new JMenu("File"); // Create File menu
+
+		fileMenu = new JMenu("File"); // Create File menu
 		game_menu = new JMenu("game"); // Create Elements menu
 		speed = new JMenu("Speed"); // Create File menu
 		csv=new JMenu("improt/export");
@@ -124,7 +124,7 @@ public class GUI_Map  extends JFrame
 		custom_fruit_whight.addActionListener(handler);
 		custom_packman_height.addActionListener(handler);
 		custom_fruit_height.addActionListener(handler);
-		
+
 	}
 	public BufferedImage get_packman() throws IOException
 	{
@@ -282,30 +282,53 @@ public class GUI_Map  extends JFrame
 			}
 			if(e.getSource()==custom_packman_range)
 			{
-				packman_range=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman range"));
-	            System.out.println(packman_range);
+				try
+				{
+					packman_range=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman range"));
+				}catch (NumberFormatException e1)
+				{
+					packman_range = 1.0;
+				}	
 			}
 			if(e.getSource()==custom_fruit_whight)
 			{
-				fruit_weight=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit weight"));
-	            System.out.println(fruit_weight);
+				try
+				{
+					fruit_weight=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit weight"));
+				}catch (NumberFormatException e1)
+				{
+					fruit_weight = 1.0;
+				}	
 			}
 			if(e.getSource()==custom_packman_speed)
 			{
-				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman speed"));
-	            System.out.println(packman_speed);
-
+				try
+				{
+					packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman speed"));
+				}catch (NumberFormatException e1)
+				{
+					packman_speed = 1.0;
+				}
 			}
 			if(e.getSource()==custom_packman_height)
 			{
-				packman_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman height"));
-	            System.out.println(packman_height);
-
+				try 
+				{
+					packman_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman height"));
+				}catch (NumberFormatException e1)
+				{
+					packman_height = 0.0;
+				}
 			}
 			if(e.getSource()==custom_fruit_height)
 			{
-				fruit_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit height"));
-	            System.out.println(fruit_height);
+				try
+				{
+					fruit_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit height"));
+				}catch (NumberFormatException e1 )
+				{
+					fruit_height = 0.0;
+				}
 			}
 		}
 	}
