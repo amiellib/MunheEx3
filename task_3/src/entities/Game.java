@@ -7,25 +7,49 @@ public class Game {
 	ArrayList<Fruit> fruit_list = new ArrayList<Fruit>();
 	ArrayList<Packman> packman_list = new ArrayList<Packman>();
 	double speed_rate = 10;
-	
+	/**
+	 * get friut_list
+	 * @return fruit_list
+	 */
 	public ArrayList<Fruit> getFruit_list() {
 		return fruit_list;
 	}
+	/**
+	 * get packman_list
+	 * @return packman_list
+	 */
 	public ArrayList<Packman> getPackman_list() {
 		return packman_list;
 	}
+	/**
+	 * get speed rate
+	 * @return speed_rate
+	 */
 	public double getSpeed_rate() {
 		return speed_rate;
 	}
+	/**
+	 * set fruit_list
+	 */
 	public void setFruit_list(ArrayList<Fruit> fruit_list) {
 		this.fruit_list = fruit_list;
 	}
+	/**
+	 * set packman_list
+	 */
 	public void setPackman_list(ArrayList<Packman> packman_list) {
 		this.packman_list = packman_list;
 	}
+	/**
+	 * set speed rate
+	 */
 	public void setSpeed_rate(double speed_rate) {
 		this.speed_rate = speed_rate;
 	}
+	/**
+	 * copy the Game and return it 
+	 * @return copy of Game
+	 */
 	public Game copy()
 	{
 		Game temp_game = new Game();
@@ -39,6 +63,9 @@ public class Game {
 		}	
 		return temp_game;
 	}
+	/**
+	 * @return string of Game info
+	 */
 	@Override
 	public String toString() {
 		return "Game [fruit_list=" + fruit_list + ", packman_list=" + packman_list + ", speed_rate=" + speed_rate + "]";
