@@ -23,8 +23,8 @@ public class GUI_Map  extends JFrame
 	private Algorithems algo; 
 	private JMenuBar menuBarstatic;
 	private JMenu fileMenu , game_menu ,speed,csv;
-	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range,custom_packman_hight,custom_fruit_hight;
-	private Double packman_speed = 1.0 , packman_range =1.0 , fruit_weight =1.0;
+	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range,custom_packman_height,custom_fruit_height;
+	private Double packman_speed = 1.0 , packman_range =1.0 , fruit_weight =1.0 , packman_height = 0.0 , fruit_height = 0.0;
 	public GUI_Map(Map map) throws IOException 
 	{
 		super("Pack Man Map");
@@ -71,10 +71,10 @@ public class GUI_Map  extends JFrame
 		custom_fruit_whight.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		custom_packman_range = new JMenuItem("custom packman range");
 		custom_packman_range.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		custom_packman_hight = new JMenuItem("custom packman hight");
-		custom_packman_hight.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		custom_fruit_hight= new JMenuItem("custom fruit hight");
-		custom_fruit_hight.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_packman_height = new JMenuItem("custom packman hight");
+		custom_packman_height.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		custom_fruit_height= new JMenuItem("custom fruit hight");
+		custom_fruit_height.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 
 		speed.add(slowdown);
 		speed.addSeparator();
@@ -84,11 +84,11 @@ public class GUI_Map  extends JFrame
 		game_menu.add(packman);
 		game_menu.addSeparator();
 		game_menu.add(custom_fruit_whight);
-		game_menu.add(custom_fruit_hight);
+		game_menu.add(custom_fruit_height);
 		game_menu.addSeparator();
 		game_menu.add(custom_packman_speed);
 		game_menu.add(custom_packman_range);
-		game_menu.add(custom_packman_hight);
+		game_menu.add(custom_packman_height);
 
 
 		fileMenu.add(new_file);
@@ -122,8 +122,8 @@ public class GUI_Map  extends JFrame
 		custom_packman_range.addActionListener(handler);
 		custom_packman_speed.addActionListener(handler);
 		custom_fruit_whight.addActionListener(handler);
-		custom_packman_hight.addActionListener(handler);
-		custom_fruit_hight.addActionListener(handler);
+		custom_packman_height.addActionListener(handler);
+		custom_fruit_height.addActionListener(handler);
 		
 	}
 	public BufferedImage get_packman() throws IOException
@@ -172,14 +172,16 @@ public class GUI_Map  extends JFrame
 		@Override
 		public void mouseClicked(MouseEvent e) 
 		{
-			Point3D point = algo.convert_pixel_to_gps(new Point3D(e.getX()-10,e.getY()+30,0), getHeight(), getWidth());
+			Point3D point;
 			if (is_fruit)
 			{
+				point = algo.convert_pixel_to_gps(new Point3D(e.getX()-10,e.getY()+30,fruit_height), getHeight(), getWidth());
 				my_game.getFruit_list().add(new Fruit(fruit_id, point , fruit_weight ));
 				fruit_id++;
 			}
 			else if (is_packman)
 			{
+				point = algo.convert_pixel_to_gps(new Point3D(e.getX()-10,e.getY()+30,packman_height), getHeight(), getWidth());
 				my_game.getPackman_list().add(new Packman(packman_id, point , packman_speed ,packman_range ));
 				packman_id++;
 			}
@@ -208,7 +210,7 @@ public class GUI_Map  extends JFrame
 			}
 			if(e.getSource()==clean_map) 
 			{
-				run_program = false;
+				reset_params();
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
 				repaint();
@@ -252,7 +254,7 @@ public class GUI_Map  extends JFrame
 			}
 			if(e.getSource()==new_file) 
 			{
-				run_program = false;
+				reset_params();
 				my_game.getFruit_list().clear();
 				my_game.getPackman_list().clear();
 				repaint();
@@ -294,16 +296,16 @@ public class GUI_Map  extends JFrame
 	            System.out.println(packman_speed);
 
 			}
-			if(e.getSource()==custom_packman_hight)
+			if(e.getSource()==custom_packman_height)
 			{
-				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman hight"));
-	            System.out.println(packman_speed);
+				packman_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter packman height"));
+	            System.out.println(packman_height);
 
 			}
-			if(e.getSource()==custom_fruit_hight)
+			if(e.getSource()==custom_fruit_height)
 			{
-				packman_speed=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit hight"));
-	            System.out.println(packman_speed);
+				fruit_height=Double.parseDouble(JOptionPane.showInputDialog(	"Enter fruit height"));
+	            System.out.println(fruit_height);
 			}
 		}
 	}
@@ -324,5 +326,20 @@ public class GUI_Map  extends JFrame
 	public Algorithems getAlgo() {
 		return algo;
 	}	
+	public void reset_params()
+	{
+		packman_speed = 1.0;
+		packman_range =1.0;
+		fruit_weight =1.0;
+		packman_height = 0.0;
+		fruit_height = 0.0;
+		fruit_id = 0;
+		packman_id =0;
+		packman_counter =0;
+		global_time = 0;
+		is_packman = false;
+		is_fruit = false; 
+		run_program = false;
+	}
 }
 
