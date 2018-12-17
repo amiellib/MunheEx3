@@ -16,7 +16,13 @@ public class Packman
 	private double speed;
 	private Image packman_image;
 
-	
+	/**
+	 * 
+	 * @param packman_id packmans id
+	 * @param gps packmans gps location
+	 * @param speed packmans speed
+	 * @param range packmans range
+	 */
 	public Packman(int packman_id ,Point3D gps, double speed , double range) {
 		super();
 		this.packman_id = packman_id;
