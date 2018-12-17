@@ -350,6 +350,8 @@ public class Algorithems {
 	{
 		double time_left = time;
 		double temp_time;
+		if (time_left == 0)
+			return path.getLocations().get(0);
 		for (int i =0 ; i<path.getLocations().size()-1;i++)
 		{
 			temp_time = cord.distance3d(path.getLocations().get(i) ,path.getLocations().get(i+1))/path.getMy_packman().getSpeed();
@@ -549,7 +551,7 @@ public class Algorithems {
 					"<styleUrl>#multiTrack</styleUrl><gx:Track>";
 							
 					
-			for (global_time=0;global_time*10<get_max_path_time(paths);global_time++)
+			for (global_time=0;global_time*10<get_max_path_time(paths)+10;global_time++)
 			{
 				temp_time = temp_time.plusSeconds(10);
 				temp =get_location_by_time(path ,global_time*10.0);
