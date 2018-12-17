@@ -5,34 +5,30 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import Coords.MyCoords;
-import GIS.My_GIS_element;
-import GIS.My_GIS_layer;
-import GIS.My_GIS_project;
-import GIS.My_meta_data;
-import Geom.My_geom_element;
 import Geom.Point3D;
 import Map.Map;
-import entities.Fruit;
-import entities.Game;
-import entities.Packman;
-import entities.Path;
+import entities.*;
 
-public class Algorithems {
-
-	MyCoords cord=new MyCoords(); 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
+public class Algorithems 
+{
+	private MyCoords cord=new MyCoords(); 
 	private double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT , TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
-	Random randomNum = new Random();
+	private Random randomNum = new Random();
 
+	/**
+	 * This constructor initializes all the fundamental data
+	 * @param map the map that we are doing all the algorithms
+	 */
 	public Algorithems(Map map)
 	{
 		super();
@@ -47,7 +43,7 @@ public class Algorithems {
 		TOTAL_DISTANCE_ANGEL_LAT = CORNER_LAT - ORIGIN_LAT;
 	}
 	/**
-	 * 
+	 * This function converts from a pixel point to a gps point
 	 * @param pixel current pixel point
 	 * @param height total pixel height
 	 * @param width total pixel width
@@ -58,7 +54,7 @@ public class Algorithems {
 		return new Point3D(ORIGIN_LAT + (pixel.y()/height)*(TOTAL_DISTANCE_ANGEL_LAT),ORIGIN_LON+(pixel.x()/width)*(TOTAL_DISTANCE_ANGEL_LON) , pixel.z());
 	}
 	/**
-	 * 
+	 * This function converts from a gps point to a pixel point
 	 * @param gps current location
 	 * @param height total pixel height
 	 * @param width total pixel width
@@ -69,7 +65,7 @@ public class Algorithems {
 		return new Point3D(width*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON)  ,height*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
 	/**
-	 * 
+	 * This function converts from a meters point to a gps point
 	 * @param meters current meters location
 	 * @return gps location
 	 */
@@ -78,7 +74,7 @@ public class Algorithems {
 		return new Point3D(ORIGIN_LAT + meters.y()/TOTAL_DISTANCE_Y*(TOTAL_DISTANCE_ANGEL_LAT) ,ORIGIN_LON+meters.x()/TOTAL_DISTANCE_X*(TOTAL_DISTANCE_ANGEL_LON) , meters.z());
 	}
 	/**
-	 * 
+	 * This function converts from a gps point to a meters point
 	 * @param gps current gps location
 	 * @return meters location
 	 */
@@ -87,7 +83,7 @@ public class Algorithems {
 		return new Point3D(TOTAL_DISTANCE_X*(gps.y() - ORIGIN_LON)/(TOTAL_DISTANCE_ANGEL_LON) ,TOTAL_DISTANCE_Y*(gps.x() - ORIGIN_LAT)/(TOTAL_DISTANCE_ANGEL_LAT) , gps.z());
 	}
 	/**
-	 * 
+	 * This function calculates the point of where the packman needs to go to hit the edge of the fruit
 	 * @param start starting point 
 	 * @param end where needed to go
 	 * @param range the packmans radius of eating
@@ -105,7 +101,7 @@ public class Algorithems {
 	}
 
 	/**
-	 * 
+	 * This function gets data from a csv file and creates a Game with all its data 
 	 * @param path_of_csv location of the csv file
 	 * @return a fully loaded game
 	 * @throws IOException exception
@@ -133,7 +129,7 @@ public class Algorithems {
 		return csv_game;
 	}
 	/**
-	 * 
+	 * This function creates a csv file from a game 
 	 * @param game the fully loaded game to export
 	 * @param path_file_name where to save the file
 	 * @throws IOException exception
@@ -154,7 +150,7 @@ public class Algorithems {
 		fileWriter.close();
 	}
 	/**
-	 * 
+	 * This function gets a list of paths and retunr the value of the max time path
 	 * @param paths list of paths
 	 * @return the time of max path
 	 */
@@ -163,7 +159,7 @@ public class Algorithems {
 		double max =0;
 		for(Path path : paths)
 			max = (max<path.get_total_time()) ? path.get_total_time() : max;
-			return max;
+		return max;
 	}
 
 	/**
