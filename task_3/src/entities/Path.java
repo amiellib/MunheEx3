@@ -18,31 +18,57 @@ public class Path {
 	private Color color;
 	private ArrayList<Point3D> locations = new ArrayList<Point3D>();
 	MyCoords cord = new MyCoords();
-
+/**
+ * build a path for a packman
+ * @param my_packman is a packman
+ */
 	public Path(Packman my_packman) {
 		super();
 		this.my_packman = my_packman;
 		color =  new Color(randomNum.nextFloat(), randomNum.nextFloat(), randomNum.nextFloat());
 		locations.add(my_packman.getGps());		
 	}
+	/**
+	 * get locations of the path
+	 * @return locations
+	 */
 	public ArrayList<Point3D> getLocations() {
 		return locations;
 	}
+	/**
+	 * set locations of the path
+	 * @param locations Point3D
+	 */
 	public void setLocations(ArrayList<Point3D> locations) {
 		this.locations = locations;
 	}
 	
-	
+	/**
+	 * get color of path
+	 * @return color
+	 */
 	public Color getColor() {
 		return color;
 	}
+	/**
+	 * set color of path
+	 * @param color a color
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	/**
+	 * total time of path
+	 * @return time of path
+	 */
 	public double get_total_time()
 	{
 		return get_total_distance()/my_packman.getSpeed();
 	}
+	/**
+	 * get total distance of path
+	 * @return total_distance
+	 */
 	public double get_total_distance()
 	{
 		double total_distance = 0.0;
@@ -56,6 +82,10 @@ public class Path {
 		}
 		return total_distance;
 	}
+	/**
+	 * copy a path
+	 * @return path_copy
+	 */
 	public Path copy()
 	{
 		Path temp_path = new Path(my_packman);
@@ -69,14 +99,25 @@ public class Path {
 		return temp_path;
 		
 	}
-	
+	/**
+	 * get path packman 
+	 * @return my_packman a packman
+	 */
 	public Packman getMy_packman() {
 		return my_packman;
 	}
+	/**
+	 * sets path packman
+	 * @param my_packman a packman
+	 */
 	public void setMy_packman(Packman my_packman) {
 		this.my_packman = my_packman;
 	}
 	@Override
+	/**
+	 * string of the path
+	 * return path in a string
+	 */
 	public String toString() {
 		return "Path [algorithems=" + ", my_packman=" + my_packman + ", time=" + time + ", locations="
 				+ locations + "]";

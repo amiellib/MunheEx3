@@ -18,14 +18,24 @@ public class Fruit
 	String[] fruits = {"src/resources/fruit.png" , "src/resources/fruit2.png" ,"src/resources/fruit3.png" ,"src/resources/fruit4.png" ,"src/resources/fruit5.png"};
 	Random randomNum = new Random();
 	private boolean is_eaten = false;
+	/**
+	 * get friut id
+	 * @return fruit id
+	 */
 	public int getFruit_id() {
 		return fruit_id;
 	}
-
+	/**
+	 * set fruit id
+	 * 
+	 */
 	public void setFruit_id(int fruit_id) {
 		this.fruit_id = fruit_id;
 	}
-
+	/**
+	 * set fruit gps 
+	 * 
+	 */
 	public void setGps(Point3D gps) {
 		Gps = gps;
 	}
@@ -46,31 +56,53 @@ public class Fruit
 			e.printStackTrace();
 		}
 	}
-
+/**
+ *  get fruit Gps
+ * @return Gps
+ */
 	public Point3D getGps() {
 		return Gps;
 	}
+	/**
+	 *  get fruit image
+	 * @return fruit image
+	 */
 	public Image getFruit_image() {
 		return fruit_image;
 	}
-
+	/**
+	 *  get fruit weight
+	 * @return weight
+	 */
 	public double getWeight() {
 		return weight;
 	}
-
+	/**
+	 * set fruit weight 
+	 * 
+	 */
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-
+/**
+ * check if fruit is eaten
+ * @return is_eaten
+ */
 	public boolean isIs_eaten() {
 		return is_eaten;
 	}
-
+	/**
+	 * set fruit is_eaten 
+	 * 
+	 */
 	public void setIs_eaten(boolean is_eaten) {
 		this.is_eaten = is_eaten;
 	}
 
 	@Override
+	/**
+	 * @return string of fruit
+	 */
 	public String toString() {
 		return "Fruit [fruit_id=" + fruit_id + ", Gps=" + Gps + ", weight=" + weight + ", fruit_image=" + fruit_image
 				+ "]";
