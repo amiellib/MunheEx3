@@ -1,5 +1,4 @@
 package Map;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.*;
@@ -266,6 +265,8 @@ public class GUI_Map  extends JFrame
 			}
 			if(e.getSource()==kml)
 			{
+				paths = algo.TSP(my_game);
+				algo.export_kml(paths, my_game, "/Users/shilo/Desktop/data/kml_first_test");
 				System.out.println(kml);
 			}
 			if(e.getSource()==custom_pacman_range)
