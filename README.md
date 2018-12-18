@@ -26,7 +26,7 @@ You will also want to download to your own computer google earth.
 
 • We used http://zetcode.com/tutorials/javaswingtutorial/menusandtoolbars/ to help us in JMenuBar .
 
-• We used https://stackoverflow.com/questions/3360182/is-there-any-way-of-adding-shortcut-keys-for-menubar-menuitem-elements-in-gwt to make   generic shurtcut on all platforms
+• We used		https://stackoverflow.com/questions/13366793/how-do-you-make-menu-item-jmenuitem-shortcut to make   generic shurtcut on all platforms
 
 • We  used https://developers.google.com/kml/documentation/kml_tut to make the KML file as neded.
 
