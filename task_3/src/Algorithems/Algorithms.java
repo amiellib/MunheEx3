@@ -11,7 +11,6 @@ import java.util.Random;
 
 import Coords.MyCoords;
 import Geom.Point3D;
-import Map.Map;
 import entities.*;
 
 /**
@@ -19,7 +18,7 @@ import entities.*;
  * @author Shilo Gilor and Amiel Liberman
  *
  */
-public class Algorithems 
+public class Algorithms 
 {
 	private MyCoords cord=new MyCoords(); // to be able to do points algorithms
 	private double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT , TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
@@ -29,7 +28,7 @@ public class Algorithems
 	 * This constructor initializes all the fundamental data
 	 * @param map the map that we are doing all the algorithms
 	 */
-	public Algorithems(Map map)
+	public Algorithms(Map map)
 	{
 		super();
 		ORIGIN_LON = map.getLeft_bottom_corner().y();
@@ -561,7 +560,7 @@ public class Algorithems
 		String final_string = start + track + fruits_kml + packmans_kml + end;
 		Writer fwriter;
 		try {
-			fwriter = new FileWriter(out_location +".kml");
+			fwriter = new FileWriter(out_location);
 			fwriter.write(final_string);
 			fwriter.flush();
 			fwriter.close();

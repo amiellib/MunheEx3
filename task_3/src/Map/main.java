@@ -3,6 +3,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import Geom.Point3D;
+import entities.Map;
 
 public class main
 {
