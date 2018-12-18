@@ -33,20 +33,24 @@ public class Game {
 	public double getSpeed_rate() {
 		return speed_rate;
 	}
+
 	/**
-	 * set fruit_list
+	 * 
+	 * @param fruit_list is the games fruit list
 	 */
 	public void setFruit_list(ArrayList<Fruit> fruit_list) {
 		this.fruit_list = fruit_list;
 	}
 	/**
-	 * set packman_list
+	 * @param packman_list is the games packmans list
 	 */
 	public void setPackman_list(ArrayList<Packman> packman_list) {
 		this.packman_list = packman_list;
 	}
+
 	/**
-	 * set speed rate
+	 * 
+	 * @param speed_rate is the speed rate that the display of packman movement
 	 */
 	public void setSpeed_rate(double speed_rate) {
 		this.speed_rate = speed_rate;

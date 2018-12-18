@@ -1,5 +1,4 @@
 package Map;
-import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.*;
@@ -193,7 +192,7 @@ public class GUI_Map  extends JFrame
 			{
 				if (path_counter== slowest_packman_id_array)	
 				{
-					g.drawImage(evil_packman,(int) (algo.convert_gps_to_pixel(algo.get_location_by_time(path, global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).x())-5, (int)(algo.convert_gps_to_pixel(algo.get_location_by_time(path, global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).y())-5,50, 50, null);
+					g.drawImage(evil_packman,(int) (algo.convert_gps_to_pixel(algo.get_location_by_time(path, global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).x())-20, (int)(algo.convert_gps_to_pixel(algo.get_location_by_time(path, global_time*my_game.getSpeed_rate()), getHeight(), getWidth()).y())-20,50, 50, null);
 				}
 				else
 				{

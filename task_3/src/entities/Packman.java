@@ -44,7 +44,7 @@ public class Packman
 	 * packman range will be 1
 	 * @param packman_id packmans id
 	 * @param gps packmans gps location
-	 * @param spee dpackmans speed
+	 * @param speed packmans speed
 	 */
 	public Packman(int packman_id , Point3D gps, double speed) {
 		this(packman_id , gps,speed,1);

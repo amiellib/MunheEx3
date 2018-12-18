@@ -60,11 +60,11 @@ public class Fruit
 	public double getWeight() {
 		return weight;
 	}
-	/**
-	 * set fruit weight 
-	 * 
-	 */
-	public void setWeight(double weight) {
+/**
+ * 
+ * @param weight the weight
+ */
+	void setWeight(double weight) {
 		this.weight = weight;
 	}
 	/**
@@ -74,16 +74,18 @@ public class Fruit
 	public int getFruit_id() {
 		return fruit_id;
 	}
+
 	/**
-	 * set fruit id
 	 * 
+	 * @param fruit_id fruit id
 	 */
 	public void setFruit_id(int fruit_id) {
 		this.fruit_id = fruit_id;
 	}
+
 	/**
-	 * set fruit gps 
 	 * 
+	 * @param gps fruit gps
 	 */
 	public void setGps(Point3D gps) {
 		Gps = gps;

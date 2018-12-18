@@ -12,14 +12,14 @@ import Geom.Point3D;
  */
 public class My_GIS_element implements GIS_element{
 	
-
+	private String MAC , SSID , AuthMode , Channel , RSSI , AccuracyMeters , Type;
 	private My_geom_element geom;
 	private My_meta_data data;
 	
 /**
  * 
  * @param geom the geo information of the location of the element (gps)
- * @param data the meta data such as colour orientation  and time
+ * @param data the meta fata such as colour orientation  and time
  * @param mAC data of point
  * @param sSID data of point
  * @param authMode data of point
@@ -28,8 +28,16 @@ public class My_GIS_element implements GIS_element{
  * @param accuracyMeters data of point
  * @param type data of point
  */
-	public My_GIS_element(My_geom_element geom, My_meta_data data) {
+	public My_GIS_element(My_geom_element geom, My_meta_data data, String mAC, String sSID, String authMode, String channel, String rSSI,
+			String accuracyMeters, String type) {
 		super();
+		MAC = mAC;
+		SSID = sSID;
+		AuthMode = authMode;
+		Channel = channel;
+		RSSI = rSSI;
+		AccuracyMeters = accuracyMeters;
+		Type = type;
 		this.geom = geom;
 		this.data = data;
 	}
@@ -53,18 +61,60 @@ public class My_GIS_element implements GIS_element{
 	public Point3D getMy_geom() {
 		return geom.getMy_geom();
 	}
+
+	public String getSSID() {
+		return SSID;
+	}
+	
+	public String getMAC() {
+		return MAC;
+	}
+	public String getAuthMode() {
+		return AuthMode;
+	}
+
+
+
+	public String getChannel() {
+		return Channel;
+	}
+
+	public String getRSSI() {
+		return RSSI;
+	}
+
+	public String getAccuracyMeters() {
+		return AccuracyMeters;
+	}
+
+	public String getType() {
+		return Type;
+	}
+
 	public String toStringOfGISElements(String color) {
 		
 		return "\t<Placemark>\n" +
-				"\t<name><![CDATA[" + "name" + "]]></name>\n" 
+				"\t<name><![CDATA[" + SSID + "]]></name>\n" 
 				+"<Style>"
 				+ "  <IconStyle>\n" + 
 				"             <color>"+color+"</color>\n" + 
 				"          </IconStyle>"+
 				"</Style>"+
-				"<ExtendedData>\n 	     <Data name=\"data\">"
-				+ "  <value>" + "data" + "</value>"
+				"<ExtendedData>\n 	     <Data name=\"MAC\">"
+				+ "  <value>" + MAC + "</value>"
 				+ "    </Data>      <Data name=\"AuthMode\">	  "
+				+ "  <value>" + AuthMode + "</value>"
+				+ "    </Data>      <Data name=\"FirstSeen\">	  "
+				+ "  <value>" + data.getUTC() + "</value>"
+				+ "    </Data>      <Data name=\"Channel\">	  "
+				+ "  <value>" + Channel + "</value>"
+				+ "    </Data>      <Data name=\"RSSI\">	  "
+				+ "  <value>" + RSSI + "</value>"
+				+ "    </Data>      <Data name=\"AccuracyMeters\">	  "
+				+ "  <value>" + AccuracyMeters + "</value>"
+				+ "    </Data>      <Data name=\"Type\">	  "
+				+ "  <value>" + Type + "</value>"
+				+ "  </Data>	   "
 				+ " </ExtendedData>"
 				+"<styleUrl>#red</styleUrl>\n"+
 				"\t<Point>\n" +

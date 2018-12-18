@@ -184,6 +184,7 @@ public class Algorithems
 	/**
 	 * This function gets a game and returns a list of paths after sorting by which packman should take which fruits
 	 * @param game the fully loaded game 
+	 * @param accuracy is the accuracy of which we calcuate shortest time
 	 * @return the list of paths for the packmans to go
 	 */
 	public Path[] TSP(Game game , double  accuracy)
@@ -314,7 +315,6 @@ public class Algorithems
 	/**
 	 * 
 	 * @param paths list of paths
-	 * @param max_path the path with the longest time
 	 * @return the list of paths after adjusted
 	 */
 	public Path[] adjusments_move_fruits(Path [] paths)
@@ -373,6 +373,7 @@ public class Algorithems
 	 * This function exports a kml file of a games paths
 	 * @param paths list of paths
 	 * @param out_location dir of output file
+	 * @param game is the game to export in kml
 	 */
 	public void export_kml(Path[] paths ,Game game , String out_location)
 	{
