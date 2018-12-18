@@ -15,13 +15,13 @@ import Map.Map;
 import entities.*;
 
 /**
- * 
+ * This class is the main algorithms for calculating many things
  * @author Shilo Gilor and Amiel Liberman
  *
  */
 public class Algorithems 
 {
-	private MyCoords cord=new MyCoords(); 
+	private MyCoords cord=new MyCoords(); // to be able to do points algorithms
 	private double ORIGIN_LON , ORIGIN_LAT , CORNER_LON , CORNER_LAT , TOTAL_DISTANCE_X ,TOTAL_DISTANCE_Y ,TOTAL_DISTANCE_ANGEL_LON ,TOTAL_DISTANCE_ANGEL_LAT;
 	private Random randomNum = new Random();
 	private double accuracy = 1.0;
@@ -159,7 +159,7 @@ public class Algorithems
 		double max =0;
 		for(Path path : paths)
 			max = (max<path.get_total_time()) ? path.get_total_time() : max;
-			return max;
+		return max;
 	}
 
 	/**
@@ -202,11 +202,11 @@ public class Algorithems
 			time_gone[i]=0;
 		for (int i =0;i<game.getFruit_list().size();i++)
 		{
-			int[] array_min = get_matrix_min(temp_game).array_min;
+			int[] array_min = get_matrix_min(temp_game).array_min; // get a value of packman (array location) and pair it with the min fruit distance (array value)
 			double[][] matrix = get_matrix_min(temp_game).matrix;
 			double time_min = time_gone[0] +matrix[0][array_min[0]];
 			int packman_to_put = 0;
-			for(int j=1;j<game.getPackman_list().size();j++)
+			for(int j=1;j<game.getPackman_list().size();j++) // find the closest packman to fruit distance by time
 			{
 				if (time_gone[j] + matrix[j][array_min[j]]<time_min)
 				{
@@ -221,7 +221,7 @@ public class Algorithems
 			temp_game.getFruit_list().remove(array_min[packman_to_put]).getGps();
 		}
 		for (int i=0;i<game.getFruit_list().size();i++)
-			paths_greedy_free = adjustments(paths_greedy_free);
+			paths_greedy_free = adjustments(paths_greedy_free); //make small random adjustments
 
 		double max_greedy_free=0;
 		for(Path path : paths_greedy_free)

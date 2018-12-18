@@ -10,6 +10,11 @@ import Algorithems.Algorithems;
 import Coords.MyCoords;
 import Geom.Point3D;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class Path {
 
 	Random randomNum = new Random();

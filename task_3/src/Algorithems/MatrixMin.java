@@ -3,7 +3,7 @@ package Algorithems;
 import java.util.Arrays;
 
 /**
- * 
+ * This class is to help with the distance matrix, it is built of the 
  * @author Shilo Gilor and Amiel Liberman
  *
  */
