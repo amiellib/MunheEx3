@@ -39,6 +39,6 @@ We have 8 packages to make the packman game,we used Point3D to crate the GPS pla
 
 algorithms is the package where all calculations are done, hence many other classes use this package.
 
-entities is a package where all the entities are defined(packman,ftuit,map,path,game).
+entities is a package where all the entities are defined(packman,fruit,map,path,game).
 
  
