@@ -9,41 +9,24 @@ import javax.imageio.ImageIO;
 
 import Geom.Point3D;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class Fruit 
 {
 	private int fruit_id;
 	private Point3D Gps;
 	private double weight;
 	private Image fruit_image;
-	String[] fruits = {"src/resources/fruit.png" , "src/resources/fruit2.png" ,"src/resources/fruit3.png" ,"src/resources/fruit4.png" ,"src/resources/fruit5.png"};
+	private String[] fruits = {"src/resources/fruit.png" , "src/resources/fruit2.png" ,"src/resources/fruit3.png" ,"src/resources/fruit4.png" ,"src/resources/fruit5.png"};
 	Random randomNum = new Random();
-	private boolean is_eaten = false;
 	/**
-	 * get friut id
-	 * @return fruit id
-	 */
-	public int getFruit_id() {
-		return fruit_id;
-	}
-	/**
-	 * set fruit id
 	 * 
-	 */
-	public void setFruit_id(int fruit_id) {
-		this.fruit_id = fruit_id;
-	}
-	/**
-	 * set fruit gps 
-	 * 
-	 */
-	public void setGps(Point3D gps) {
-		Gps = gps;
-	}
-
-
-	/**
-	 * build a Fruit 
-	 * @param gps where is the Fruit placed
+	 * @param fruit_id is the fruit id
+	 * @param gps is the gps location
+	 * @param weight is the fruit value
 	 */
 	public Fruit(int fruit_id ,Point3D gps , double weight)
 	{
@@ -84,19 +67,26 @@ public class Fruit
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-/**
- * check if fruit is eaten
- * @return is_eaten
- */
-	public boolean isIs_eaten() {
-		return is_eaten;
+	/**
+	 * get friut id
+	 * @return fruit id
+	 */
+	public int getFruit_id() {
+		return fruit_id;
 	}
 	/**
-	 * set fruit is_eaten 
+	 * set fruit id
 	 * 
 	 */
-	public void setIs_eaten(boolean is_eaten) {
-		this.is_eaten = is_eaten;
+	public void setFruit_id(int fruit_id) {
+		this.fruit_id = fruit_id;
+	}
+	/**
+	 * set fruit gps 
+	 * 
+	 */
+	public void setGps(Point3D gps) {
+		Gps = gps;
 	}
 
 	@Override

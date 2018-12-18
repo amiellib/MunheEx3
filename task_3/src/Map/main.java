@@ -15,8 +15,6 @@ public class main
 		game.setSize(1433,642);
 		game.setVisible(true);
 		game.setLocationRelativeTo(null);
-
-
 	}
 
 

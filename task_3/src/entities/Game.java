@@ -2,6 +2,11 @@ package entities;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class Game {
 
 	ArrayList<Fruit> fruit_list = new ArrayList<Fruit>();

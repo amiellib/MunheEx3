@@ -8,6 +8,11 @@ import javax.imageio.ImageIO;
 
 import Geom.Point3D;
 
+/**
+ * 
+ * @author Shilo Gilor and Amiel Liberman
+ *
+ */
 public class Packman 
 {
 	private int packman_id;
