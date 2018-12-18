@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import Algorithems.Algorithems;
+import Algorithems.Algorithms;
 import Geom.Point3D;
 import entities.*;
 
@@ -25,7 +25,7 @@ public class GUI_Map  extends JFrame
 	private Game my_game = new Game();
 	private BufferedImage backgroundImage , packman_image_eating_temp , evil_packman = ImageIO.read(new File("src/resources/evil_packman.png"));
 	private Path [] paths;
-	private Algorithems algo; 
+	private Algorithms algo; 
 	private JMenuBar menuBarstatic;
 	private JMenu fileMenu , game_menu ,speed,csv , accuracy;
 	private JMenuItem clean_map , slowdown , fast_forwards , exit , run , save , fruit , packman , new_file , open,kml,custom_fruit_whight,custom_packman_speed,custom_packman_range,custom_packman_height,custom_fruit_height , accuracy_level;
@@ -37,7 +37,7 @@ public class GUI_Map  extends JFrame
 	public GUI_Map(Map map) throws IOException 
 	{
 		super("PackMan Map");
-		this.algo = new Algorithems(map);
+		this.algo = new Algorithms(map);
 		max_time = new JTextField("Max Path Time:" + max_path_time);
 		max_time.setEditable(false);
 		backgroundImage = map.getBackgroundImage();
@@ -327,8 +327,14 @@ public class GUI_Map  extends JFrame
 			if(e.getSource()==kml)
 			{
 				paths = algo.TSP(my_game ,accuracy_rate);
-				algo.export_kml(paths, my_game, "/Users/shilo/Desktop/data/kml_first_test");
 				System.out.println(kml);
+				JFrame parentFrame = new JFrame();
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Specify a file to save");
+				if (fileChooser.showSaveDialog(parentFrame) == JFileChooser.APPROVE_OPTION) {
+					algo.export_kml(paths, my_game, fileChooser.getSelectedFile().toString());
+
+				}
 			}
 			if(e.getSource()==custom_packman_range)
 			{
@@ -409,7 +415,7 @@ public class GUI_Map  extends JFrame
 			e.printStackTrace();
 		}
 	}
-	public Algorithems getAlgo() {
+	public Algorithms getAlgo() {
 		return algo;
 	}	
 	/**

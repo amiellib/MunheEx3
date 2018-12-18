@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import Algorithems.Algorithems;
+import Algorithems.Algorithms;
 import Coords.MyCoords;
 import Geom.Point3D;
 
