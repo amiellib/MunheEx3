@@ -51,3 +51,44 @@ entities is a package where all the entities are defined(packman,fruit,map,path,
 
 GUI is a package where all the graphic are done.
 
+#funcions in the map toolbar
+
+file:
+• new = crate new map
+
+• run = make the path and move the packmans
+
+• clean = clear the map
+
+• Exit = stop the app 
+
+game:
+• fruit = click on the map will put a fruit from now
+
+• packman = click on the map will put a packman from now
+
+• custom fruit weight = from now the weight of fruit will be the number you put now
+
+• custom fruit hight = from now the hight of fruit will be the number you put now
+
+• custom packman speed = from now the speed of packman will be the number you put now
+
+• custom packman range = from now the range of packman will be the number you put now
+
+• custom packman hight = from now the hight of packman will be the number you put now
+
+speed:
+• slow down = packman will run slowe down
+
+• fast forwards = packman will run will go faster
+
+import/export:
+• open = open CSV file
+
+• save = save the game as a CSV file
+
+• make kml = save a game as KML file
+
+accuracy:
+
+• accuracy_level = 
