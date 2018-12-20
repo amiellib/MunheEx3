@@ -49,41 +49,43 @@ algorithms is the package where all calculations are done, hence many other clas
 
 entities is a package where all the entities are defined(packman,fruit,map,path,game).
 
-GUI is a package where all the graphic are done.
+GUI is a package where all the graphics are done.
 
 #funcions in the map toolbar
 
 file:
 
-• new = crate new map
+• new = create new map
 
-• run = make the path and move the packmans
+• run = calculate the path and move the packmans
 
 • clean = clear the map
 
-• Exit = stop the app 
+• Exit = exit the app 
 
 game:
 
-• fruit = click on the map will put a fruit from now
+• fruit = click on the map will put a fruit from now in the click location
 
-• packman = click on the map will put a packman from now
+• packman = click on the map will put a packman from now in the click location
 
-• custom fruit weight = from now the weight of fruit will be the number you put now
+• custom fruit weight = from now the weight of fruit will be the number you put in
 
-• custom fruit hight = from now the hight of fruit will be the number you put now
+• custom fruit height = from now the height of fruit will be the number you put in
 
-• custom packman speed = from now the speed of packman will be the number you put now
+• custom packman speed = from now the speed of packman will be the number you put in
 
-• custom packman range = from now the range of packman will be the number you put now
+• custom packman range = from now the range of packman will be the number you put in
 
-• custom packman hight = from now the hight of packman will be the number you put now
+• custom packman height = from now the height of packman will be the number you put in
+
+* in all these if you put an ilagical value it will go back to the default.
 
 speed:
 
-• slow down = packman will run slowe down
+• slow down = packman will run slower by half
 
-• fast forwards = packman will run will go faster
+• fast forwards = packman will run faster (times 2)
 
 import/export:
 
@@ -95,4 +97,4 @@ import/export:
 
 accuracy:
 
-• accuracy_level = 
+• accuracy_level = default as 1, and the highter you go the better statistic result you would get but with more iterations so could take longer for a result.(recomended good result is 10)
